@@ -1,10 +1,19 @@
+// All site copy. Anything with `standin: true` is a placeholder Ethan replaces
+// from his résumé; it renders in a dashed box until then.
+
+export interface Fact {
+  label: string
+  value: string
+  standin?: boolean
+}
+
 export interface Project {
   name: string
-  tagline: string
-  hard: string
+  line: string
   stack: string[]
-  links: { github?: string; live?: string }
-  featured?: boolean
+  year: string
+  url?: string
+  standin?: boolean
 }
 
 export interface Role {
@@ -13,75 +22,75 @@ export interface Role {
   start: string
   end: string
   bullets: string[]
-  stack: string[]
   url?: string
+  standin?: boolean
+}
+
+export interface Standable {
+  text: string
+  standin?: boolean
+}
+
+export interface TimelineItem extends Standable {
+  year: string
 }
 
 export const site = {
   name: 'Ethan Tran',
-  title: 'TODO: Software engineer · CS @ School · ’27',
-  hook: 'TODO: One sentence on what you build and why it matters.',
-  email: 'TODO@example.com',
+  lead: 'Software engineer. I build backend services, computer-vision tools and the web apps that sit on top of them, in C++, Python and TypeScript.',
+  email: 'hello@ethanctran.dev',
   github: 'https://github.com/etctran',
-  linkedin: 'TODO: https://www.linkedin.com/in/your-handle',
+  linkedin: 'https://www.linkedin.com/',
   resumeUrl: '/resume.pdf',
+  facts: [
+    { label: 'Studying', value: 'Degree · School · Class of ’27', standin: true },
+    { label: 'Based in', value: 'City, State', standin: true },
+    { label: 'Looking for', value: 'Summer 2027 software engineering internship', standin: true },
+    { label: 'Works in', value: 'C++, Python, TypeScript, React, FastAPI, Docker' },
+  ] as Fact[],
 }
 
 export const projects: Project[] = [
   {
     name: 'FormIQ',
-    tagline: 'Exercise form analysis from video.',
-    hard:
-      'A C++ engine runs MediaPipe pose models through LiteRT to pull 33 keypoints per frame at 30 fps, exposed to Python in-process via pybind11. OpenCV’s model loader couldn’t load the real detector (unsupported DENSIFY op), so I swapped in the LiteRT interpreter and kept OpenCV only for video. The FastAPI backend turns keypoints into rep boundaries with a four-phase state machine and scores each rep against declarative fault rules for eight exercises — under three seconds per video.',
-    stack: ['C++', 'LiteRT', 'OpenCV', 'pybind11', 'FastAPI', 'SQLite', 'React', 'TypeScript', 'Docker'],
-    links: { github: 'https://github.com/etctran/FormIQ' },
-    featured: true,
+    line: 'Scores exercise form from a phone video: finds each rep and flags faults across eight lifts.',
+    stack: ['C++', 'Python', 'FastAPI', 'React'],
+    year: '2026',
+    url: 'https://github.com/etctran/FormIQ',
   },
-  {
-    name: 'TODO: Project two',
-    tagline: 'TODO: One line on what it does.',
-    hard: 'TODO: Two or three lines on what was hard and how you solved it.',
-    stack: ['TODO'],
-    links: { github: 'https://github.com/etctran' },
-  },
-  {
-    name: 'TODO: Project three',
-    tagline: 'TODO: One line on what it does.',
-    hard: 'TODO: Two or three lines on what was hard and how you solved it.',
-    stack: ['TODO'],
-    links: { github: 'https://github.com/etctran' },
-  },
+  { name: 'Project name', line: 'One line on what it does and who it’s for.', stack: ['Stack', 'Stack', 'Stack'], year: 'Year', standin: true },
+  { name: 'Project name', line: 'One line on what it does and who it’s for.', stack: ['Stack', 'Stack', 'Stack'], year: 'Year', standin: true },
+  { name: 'Project name', line: 'One line on what it does and who it’s for.', stack: ['Stack', 'Stack', 'Stack'], year: 'Year', standin: true },
 ]
 
 export const experience: Role[] = [
   {
-    company: 'TODO: Company',
-    role: 'TODO: Software Engineering Intern',
+    company: 'Company',
+    role: 'Role',
     start: '2026',
-    end: 'Present',
-    bullets: ['TODO: Impact bullet with a number.', 'TODO: Second impact bullet.'],
-    stack: ['TODO'],
-    url: 'https://example.com',
+    end: 'now',
+    bullets: ['What you shipped and the result, with a number.', 'A second line on scope or impact.'],
+    standin: true,
   },
   {
-    company: 'TODO: Earlier company',
-    role: 'TODO: Role',
+    company: 'Company',
+    role: 'Role',
     start: '2025',
     end: '2025',
-    bullets: ['TODO: Impact bullet with a number.'],
-    stack: ['TODO'],
+    bullets: ['What you shipped and the result, with a number.'],
+    standin: true,
   },
 ]
 
-export const about: { timeline: string[]; paragraphs: string[]; photo?: string } = {
-  timeline: [
-    'TODO: 2005 — Born somewhere; the thing you were obsessed with as a kid.',
-    'TODO: 2021 — First real program; what it did.',
-    'TODO: 2023 — Started CS at School; the course or project that hooked you.',
-    'TODO: 2026 — Now: what you’re building and what you want next.',
-  ],
+export const about: { paragraphs: Standable[]; timeline: TimelineItem[] } = {
   paragraphs: [
-    'TODO: Two or three sentences on what you like working on and how you work.',
-    'TODO: One or two sentences on life outside code (lifting, music, food, wherever you’re from).',
+    { text: 'Two or three sentences in your own voice: what you like to build and how you work.', standin: true },
+    { text: 'One or two on life outside code.', standin: true },
+  ],
+  timeline: [
+    { year: 'Year', text: 'Where it started.', standin: true },
+    { year: 'Year', text: 'First program worth keeping.', standin: true },
+    { year: 'Year', text: 'School and what you study.', standin: true },
+    { year: '2026', text: 'What you’re working on now.', standin: true },
   ],
 }

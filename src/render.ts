@@ -1,83 +1,55 @@
-import type { Project, Role, site as Site, about as About } from './content'
-
-type SiteInfo = typeof Site
-type AboutInfo = typeof About
+import type { Fact, Project, Role, Standable, TimelineItem } from './content'
 
 const ENT: Record<string, string> = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }
 const esc = (s: string): string => s.replace(/[&<>"']/g, (c) => ENT[c])
+const cls = (base: string, standin?: boolean): string => (standin ? `${base} standin` : base)
 
-export const ext = (href: string, label: string): string =>
-  `<a href="${esc(href)}" target="_blank" rel="noopener noreferrer">${esc(label)}</a>`
+export const ext = (href: string, label: string, className = ''): string =>
+  `<a${className ? ` class="${className}"` : ''} href="${esc(href)}" target="_blank" rel="noopener noreferrer">${esc(label)}</a>`
 
-const tags = (stack: string[]): string =>
-  stack.length ? `<ul class="tags">${stack.map((t) => `<li>${esc(t)}</li>`).join('')}</ul>` : ''
-
-export function renderHeroCopy(s: SiteInfo): string {
-  return `
-    <p class="hero__title">${esc(s.title)}</p>
-    <p class="hero__hook">${esc(s.hook)}</p>
-    <div class="hero__actions">
-      <a class="btn btn--primary" href="#projects">Projects</a>
-      <a class="btn" href="${esc(s.resumeUrl)}">Resume</a>
-      <a class="btn" href="mailto:${esc(s.email)}">Email</a>
-    </div>`
+export function renderFacts(facts: Fact[]): string {
+  return facts
+    .map((f) => `<div${f.standin ? ' class="standin"' : ''}><dt>${esc(f.label)}</dt><dd>${esc(f.value)}</dd></div>`)
+    .join('')
 }
 
 export function renderProjects(list: Project[]): string {
-  const cards = list.map((p) => {
-    const links = [
-      p.links.github ? ext(p.links.github, 'GitHub ↗') : '',
-      p.links.live ? ext(p.links.live, 'Live ↗') : '',
-    ].join('')
-    return `
-      <article class="card reveal${p.featured ? ' card--featured' : ''}">
-        <h3>${esc(p.name)}</h3>
-        <p class="card__tagline">${esc(p.tagline)}</p>
-        <p class="card__hard">${esc(p.hard)}</p>
-        ${tags(p.stack)}
-        ${links ? `<div class="card__links">${links}</div>` : ''}
-      </article>`
-  })
-  return `<div class="cards">${cards.join('')}</div>`
+  return list
+    .map((p) => {
+      const inner = `<h3>${esc(p.name)}</h3><p>${esc(p.line)}</p><p class="stack">${esc(p.stack.join(' · '))}</p><p class="year data">${esc(p.year)}</p><span class="arrow" aria-hidden="true">↗</span>`
+      return p.url
+        ? `<a class="${cls('row', p.standin)}" href="${esc(p.url)}" target="_blank" rel="noopener noreferrer">${inner}</a>`
+        : `<div class="${cls('row', p.standin)}">${inner}</div>`
+    })
+    .join('')
 }
 
 export function renderExperience(list: Role[]): string {
-  const items = list.map((r) => {
-    const company = r.url ? ext(r.url, r.company) : esc(r.company)
-    return `
-      <li class="timeline__item reveal">
-        <span class="timeline__date">${esc(r.start)} — ${esc(r.end)}</span>
-        <div class="timeline__body">
-          <h3>${esc(r.role)} <span class="timeline__at">· ${company}</span></h3>
-          <ul class="bullets">${r.bullets.map((b) => `<li>${esc(b)}</li>`).join('')}</ul>
-          ${tags(r.stack)}
-        </div>
-      </li>`
-  })
-  return `<ol class="timeline"><span class="rail" aria-hidden="true"></span>${items.join('')}</ol>`
+  return list
+    .map((r) => {
+      const company = r.url ? ext(r.url, r.company, 'link') : esc(r.company)
+      return `<article class="${cls('exp', r.standin)}"><p class="data exp__date">${esc(r.start)} — ${esc(r.end)}</p><div><h3>${esc(r.role)} · ${company}</h3><ul>${r.bullets.map((b) => `<li>${esc(b)}</li>`).join('')}</ul></div></article>`
+    })
+    .join('')
 }
 
-export function renderAbout(a: AboutInfo): string {
-  const photo = a.photo
-    ? `<img class="about__photo" src="${esc(a.photo)}" alt="Ethan Tran" width="320" height="320" loading="lazy" />`
-    : ''
+export function renderAbout(a: { paragraphs: Standable[]; timeline: TimelineItem[] }): string {
+  const paras = a.paragraphs.map((p) => (p.standin ? `<p class="standin">${esc(p.text)}</p>` : `<p>${esc(p.text)}</p>`)).join('')
+  const items = a.timeline
+    .map((t) => `<li${t.standin ? ' class="standin"' : ''}><span class="data">${esc(t.year)}</span><span>${esc(t.text)}</span></li>`)
+    .join('')
+  return `<div class="about__text">${paras}</div><ol class="brief">${items}</ol>`
+}
+
+export function renderContact(s: { email: string; github: string; linkedin: string; resumeUrl: string }): string {
   return `
-    <div class="about">
-      <ol class="brief reveal">${a.timeline.map((t) => `<li>${esc(t)}</li>`).join('')}</ol>
-      <div class="about__text reveal">
-        ${a.paragraphs.map((p) => `<p>${esc(p)}</p>`).join('')}
-        ${photo}
-      </div>
+    <div class="email">
+      <span class="email__addr" id="email">${esc(s.email)}</span>
+      <button class="btn" id="copy" type="button">Copy email</button>
+    </div>
+    <div class="close__links">
+      ${ext(s.github, 'GitHub', 'link')}
+      ${ext(s.linkedin, 'LinkedIn', 'link')}
+      <a class="link" href="${esc(s.resumeUrl)}">Résumé (PDF)</a>
     </div>`
-}
-
-export function renderContact(s: SiteInfo): string {
-  return `
-    <ul class="contact reveal">
-      <li><a href="mailto:${esc(s.email)}">${esc(s.email)}</a></li>
-      <li>${ext(s.github, 'GitHub')}</li>
-      <li>${ext(s.linkedin, 'LinkedIn')}</li>
-      <li><a href="${esc(s.resumeUrl)}">Resume (PDF)</a></li>
-    </ul>
-    <p class="footer">© ${new Date().getFullYear()} ${esc(s.name)} · built by hand with Vite + anime.js</p>`
 }

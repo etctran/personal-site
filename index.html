@@ -2,64 +2,81 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>Ethan Tran — Software Engineer</title>
+    <meta name="description" content="Ethan Tran, software engineer: projects, experience and how to get in touch." />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="preload" href="/fonts/inter.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="/fonts/jetbrains-mono.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/archivo.woff2" as="font" type="font/woff2" crossorigin />
   </head>
   <body>
-    <nav id="nav" class="nav" aria-label="Primary">
-      <a class="nav__brand" href="#top">ethan tran</a>
-      <div class="nav__links">
-        <a href="#projects">projects</a>
-        <a href="#experience">experience</a>
-        <a href="#about">about</a>
-        <a href="/resume.pdf">resume</a>
-      </div>
-    </nav>
-
-    <main id="top">
-      <header id="hero" class="hero">
-        <canvas id="hero-canvas" class="hero__canvas" aria-hidden="true"></canvas>
-        <div class="hero__inner section-body">
-          <h1 id="hero-name" class="hero__name">Ethan Tran</h1>
-          <div id="hero-copy" class="hero__copy"></div>
+    <div class="wrap">
+      <nav id="nav" class="nav" aria-label="Primary">
+        <a class="nav__name" href="#top">Ethan Tran</a>
+        <div class="nav__links">
+          <a class="link" href="#projects">Projects</a>
+          <a class="link" href="#experience">Experience</a>
+          <a class="link" href="#about">About</a>
+          <a class="link" href="/resume.pdf">Résumé</a>
         </div>
+      </nav>
+
+      <header class="hero" id="top">
+        <div>
+          <h1 class="name" id="name"><span class="name__line">Ethan</span> <span class="name__line">Tran</span></h1>
+          <p class="hero__lead fade-up" id="lead" style="--i: 0"></p>
+          <div class="hero__actions">
+            <a class="btn btn--solid fade-up" style="--i: 1" href="#projects"
+              >See projects
+              <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">
+                <path d="M2 7h10M8 3l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </a>
+            <a class="btn fade-up" style="--i: 2" href="/resume.pdf">Download résumé</a>
+          </div>
+        </div>
+        <dl class="facts fade-up" id="facts" style="--i: 3"></dl>
       </header>
+    </div>
 
-      <section id="projects" class="section">
-        <div class="section-body">
-          <p class="label">01 / Projects</p>
-          <h2>Projects</h2>
+    <main>
+      <section id="projects" aria-labelledby="projects-h">
+        <div class="wrap">
+          <div class="section-head">
+            <h2 id="projects-h">Projects</h2>
+            <p>Things I’ve built, newest first.</p>
+          </div>
+          <div class="rows section-content"></div>
+        </div>
+      </section>
+
+      <section id="experience" aria-labelledby="experience-h">
+        <div class="wrap">
+          <div class="section-head">
+            <h2 id="experience-h">Experience</h2>
+            <p>Most recent first.</p>
+          </div>
           <div class="section-content"></div>
         </div>
       </section>
 
-      <section id="experience" class="section">
-        <div class="section-body">
-          <p class="label">02 / Experience</p>
-          <h2>Experience</h2>
-          <div class="section-content"></div>
+      <section id="about" aria-labelledby="about-h">
+        <div class="wrap">
+          <div class="section-head"><h2 id="about-h">About</h2></div>
+          <div class="about section-content"></div>
         </div>
       </section>
 
-      <section id="about" class="section">
-        <div class="section-body">
-          <p class="label">03 / About</p>
-          <h2>About</h2>
-          <div class="section-content"></div>
-        </div>
-      </section>
-
-      <section id="contact" class="section section--contact">
-        <div class="section-body">
-          <p class="label">04 / Contact</p>
-          <h2>Say hi</h2>
+      <section id="contact" class="close" aria-labelledby="contact-h">
+        <div class="wrap">
+          <h2 id="contact-h">Get in touch</h2>
           <div class="section-content"></div>
         </div>
       </section>
     </main>
+
+    <div class="wrap">
+      <footer><span>© 2026 Ethan Tran</span><span>ethanctran.dev</span></footer>
+    </div>
 
     <script type="module" src="/src/main.ts"></script>
   </body>

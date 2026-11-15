@@ -217,7 +217,31 @@ git add -A && git commit -m "feat: section layout, cards, favicon; document page
 
 ---
 
-## Milestone 2 — Hero (Tasks 4–5)
+## Revision 2026-11-15 — Tasks 4–6 replaced by Task R
+
+The spec's "Revision 2026-11-15" section replaces the particle hero and the
+anime.js motion pass. Task 4 shipped and is now deleted by Task R; Tasks 5
+and 6 below are **superseded — do not execute**. Tasks 7 and 8 stand, with
+`ethanctran.dev` and the new design.
+
+### Task R: Port the approved "typeset sheet" design
+
+**Files:**
+- Modify: `index.html`, `src/content.ts`, `src/render.ts`, `src/main.ts`, `src/styles/tokens.css`, `src/styles/site.css`, `package.json`, `tests/render.test.ts`
+- Create: `src/name.ts`, `tests/name.test.ts`, `public/fonts/archivo.woff2`
+- Delete: `src/hero/`, `tests/pose.test.ts`, `tests/text-points.test.ts`, `tests/particles.test.ts`, `public/fonts/inter.woff2`, `public/fonts/jetbrains-mono.woff2`; npm deps `animejs`, `@fontsource-variable/inter`, `@fontsource-variable/jetbrains-mono`
+
+**Interfaces:**
+- `content.ts`: `site { name, lead, email, github, linkedin, resumeUrl, facts: Fact[] }`, `Fact { label, value, standin? }`, `Project { name, line, stack: string[], year, url?, standin? }`, `Role { company, role, start, end, bullets, url?, standin? }`, `about { paragraphs: Standable[], timeline: { year, text, standin? }[] }`.
+- `render.ts`: `renderLead`, `renderFacts`, `renderProjects`, `renderExperience`, `renderAbout`, `renderContact` — pure, escaped HTML strings; `standin` adds class `standin`; a project without `url` renders a `div.row`, not an `a`.
+- `name.ts`: `weightFor(distance: number, radius: number, rest = 300, peak = 900): number` (smoothstep, `rest` at ≥ radius, `peak` at 0) and `initName(h1: HTMLElement): void`.
+
+- [ ] Write/adjust tests for the new renderers and `weightFor`; watch them fail.
+- [ ] Implement; tests pass; `npm run build` passes.
+- [ ] Verify in the browser at 1440 and 375 (no horizontal overflow), dark scheme, reduced motion, and the pointer effect.
+- [ ] Commit `feat: port approved typeset-sheet design` and push.
+
+## Milestone 2 — Hero (Tasks 4–5) — superseded
 
 ### Task 4: Pose keyframes and text sampling (pure, tested)
 

@@ -1,42 +1,36 @@
 @font-face {
-  font-family: 'Inter Variable';
+  font-family: 'Archivo';
   font-style: normal;
   font-weight: 100 900;
+  font-stretch: 62% 125%;
   font-display: swap;
-  src: url('/fonts/inter.woff2') format('woff2');
+  src: url('/fonts/archivo.woff2') format('woff2-variations');
 }
 
-@font-face {
-  font-family: 'JetBrains Mono Variable';
-  font-style: normal;
-  font-weight: 100 800;
-  font-display: swap;
-  src: url('/fonts/jetbrains-mono.woff2') format('woff2');
-}
-
+/* A typeset sheet: grey photographic paper, ink, one red accent for focus and hover. */
 :root {
-  color-scheme: dark;
+  --paper: #e9e8e3;
+  --paper-2: #dfded8;
+  --ink: #151513;
+  --ink-2: #4b4a45;
+  --rule: #c4c2ba;
+  --signal: #c42c1b;
 
-  --bg: #0b0d10;
-  --bg-raised: #12151a;
-  --fg: #ededed;
-  --muted: #9aa0a9;
-  --line: #1f242b;
-  --accent: #ff8a3d;
-  --accent-soft: rgb(255 138 61 / 0.14);
+  --sans: 'Archivo', 'Helvetica Neue', Arial, sans-serif;
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-enter: cubic-bezier(0.22, 1, 0.36, 1);
+  --max: 1240px;
+  --col-gap: clamp(32px, 6vw, 96px);
+}
 
-  --font-sans: 'Inter Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --font-mono: 'JetBrains Mono Variable', ui-monospace, SFMono-Regular, Menlo, monospace;
-
-  --max-w: 1100px;
-  --gutter: 16px;
-  --space-1: 0.5rem;
-  --space-2: 1rem;
-  --space-3: 1.5rem;
-  --space-4: 2.5rem;
-  --space-5: 4rem;
-  --space-6: 7rem;
-
-  --radius: 14px;
-  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #121211;
+    --paper-2: #1c1c1a;
+    --ink: #edece6;
+    --ink-2: #a9a79f;
+    --rule: #2e2d2a;
+    --signal: #ff5a44;
+    color-scheme: dark;
+  }
 }

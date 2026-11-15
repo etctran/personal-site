@@ -86,6 +86,46 @@ else (dark, one typeface, monospace labels, lots of space).
 3. **Framer / template.** Fastest, but the hero can't be custom and hosts
    notice templates. Rejected: works against "memorable" and "hand-built".
 
+## Revision 2026-11-15 — supersedes Theme, Hero, Page structure, Content model and motion below
+
+Ethan reviewed a working prototype (claude.ai artifact "Ethan Tran Motion
+Study", v2) and approved it. It was shaped with the impeccable, taste and
+Emil Kowalski design skills. Where the sections below disagree, this wins.
+
+- **Why the change.** impeccable's calibration list names "near-black with one
+  glowing accent, Inter display, tracked mono labels" as a stock AI look, and
+  bans eyebrow labels and `01 /` section numbers. Ethan also asked that
+  FormIQ be one project among several, not the site's subject — so no
+  pose/particle hero.
+- **World.** A typeset sheet: grey photographic paper (`#e9e8e3`), ink
+  (`#151513`), secondary ink (`#4b4a45`), rules (`#c4c2ba`), one red accent
+  (`#c42c1b`) used only for focus, selection and link/arrow hover. Dark mode
+  is a real second palette (`#121211` ground, `#edece6` ink, `#ff5a44` accent),
+  chosen by `prefers-color-scheme`.
+- **Type.** One family, Archivo variable (wdth 62–125, wght 100–900),
+  self-hosted: 125 % width for display, 100 % for body, 75 % with tabular
+  numerals for dates/years. No monospace.
+- **Hero.** `h1` is the name on two lines ("Ethan" / "Tran") at
+  `clamp(3.6rem, 9vw, 6rem)`, weight 300, width 125 %. Entrance: each letter
+  sets from weight 900 / width 62 to 300 / 125, 760 ms, 45 ms stagger. After
+  that, each letter's weight rises toward 900 as the pointer nears it
+  (smoothstep falloff over 1.5 × font-size), easing back when it leaves; touch
+  drag does the same. Reduced motion: static. Beside it, a fact list
+  (Studying, Based in, Looking for, Works in), and below the name one lead
+  sentence plus two buttons: "See projects", "Download résumé".
+- **Sections.** Projects (ruled rows: name, one line, stack, year, ↗ — FormIQ
+  is a normal row), Experience (date column + role · company + bullets),
+  About (paragraphs + four-line year timeline), Get in touch (email set large
+  with a Copy button; GitHub, LinkedIn, résumé links), footer.
+- **Motion.** Only the hero moves (entrance + name). Lead/buttons/facts fade
+  up 12 px once on load. No scroll reveals, no nav blur, no experience rail,
+  no anime.js. Hover: links draw an underline, buttons rise 1 px and press to
+  scale .97, row arrows nudge 2 px and turn accent; hover only on
+  `(hover: hover) and (pointer: fine)`. Easing `cubic-bezier(.23,1,.32,1)`,
+  150–160 ms.
+- **Contact.** `hello@ethanctran.dev` via Cloudflare Email Routing
+  (forwarding to Ethan's inbox) — set up at launch.
+
 ## Decisions
 
 ### Stack (my call, from Ethan's existing tooling)
