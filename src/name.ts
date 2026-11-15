@@ -1,16 +1,21 @@
-const REST = 300
-const PEAK = 900
+const REST = 800
+const PEAK = 250
 
-/** Weight for a letter `distance` px from the pointer: `peak` at 0, `rest` at ≥ `radius`, smoothstep between. */
-export function weightFor(distance: number, radius: number, rest = REST, peak = PEAK): number {
+/** 1 at the pointer, 0 at or beyond `radius`, smoothstep between. */
+export function nearness(distance: number, radius: number): number {
   const f = Math.max(0, 1 - distance / radius)
-  return rest + (peak - rest) * f * f * (3 - 2 * f)
+  return f * f * (3 - 2 * f)
 }
 
-/** The click ripple: a ring of weight that travels outward and fades. px, px/ms, ms. */
+/** Weight for a letter `distance` px from the pointer: `rest` far away, `peak` right under it. */
+export function weightFor(distance: number, radius: number, rest = REST, peak = PEAK): number {
+  return rest + (peak - rest) * nearness(distance, radius)
+}
+
+/** The click ripple: a ring that travels outward through the letters and fades. px, px/ms, ms. */
 export const WAVE = { speed: 0.9, width: 90, duration: 1100 }
 
-/** 0..1 boost for a letter `distance` px from the click, `elapsed` ms after it. */
+/** 0..1 strength of the ripple for a letter `distance` px from the click, `elapsed` ms after it. */
 export function waveBoost(distance: number, elapsed: number): number {
   if (elapsed < 0 || elapsed >= WAVE.duration) return 0
   const front = WAVE.speed * elapsed
@@ -22,9 +27,9 @@ const ENTRANCE_STAGGER = 45 // ms, matches .name .ch animation-delay in site.css
 const ENTRANCE_LENGTH = 760 // ms, matches the `set` keyframes duration
 
 /**
- * Splits the h1's `.name__line` spans into letters. After the CSS typesetting
- * entrance, each letter gets heavier as the pointer nears it, and a click or
- * tap on the name sends a ripple of weight outward through the letters.
+ * Splits the h1's `.name__line` spans into letters. After the CSS entrance,
+ * the heavy letters thin out where the pointer is (the same way the particles
+ * scatter from it), and a click or tap sends a ripple of thin through the name.
  * Reduced motion: letters stay put and nothing listens.
  */
 export function initName(h1: HTMLElement): void {
@@ -62,13 +67,14 @@ export function initName(h1: HTMLElement): void {
     }
   }
   const frame = (now: number): void => {
-    const radius = parseFloat(getComputedStyle(h1).fontSize) * 1.5
+    const radius = parseFloat(getComputedStyle(h1).fontSize) * 1.2
     const elapsed = wave ? now - wave.t0 : -1
     if (wave && elapsed >= WAVE.duration) wave = null
     let moving = wave !== null
     for (const l of letters) {
-      let target = pointer.on ? weightFor(Math.hypot(pointer.x - l.x, pointer.y - l.y), radius) : REST
-      if (wave) target = Math.max(target, REST + (PEAK - REST) * waveBoost(Math.hypot(wave.x - l.x, wave.y - l.y), elapsed))
+      let f = pointer.on ? nearness(Math.hypot(pointer.x - l.x, pointer.y - l.y), radius) : 0
+      if (wave) f = Math.max(f, waveBoost(Math.hypot(wave.x - l.x, wave.y - l.y), elapsed))
+      const target = REST + (PEAK - REST) * f
       l.w += (target - l.w) * 0.22
       if (Math.abs(target - l.w) > 0.5) moving = true
       else l.w = target

@@ -7,43 +7,23 @@
   src: url('/fonts/archivo.woff2') format('woff2-variations');
 }
 
-/* A typeset sheet: grey photographic paper, ink, one red accent for focus and hover. */
+/* Live wire: a black stage, white type, and a six-colour particle field behind everything.
+   One committed dark world, so there is no light theme. */
 :root {
-  --paper: #e9e8e3;
-  --paper-2: #dfded8;
-  --ink: #151513;
-  --ink-2: #4b4a45;
-  --rule: #c4c2ba;
-  --signal: #c42c1b;
-  color-scheme: light;
+  color-scheme: dark;
+
+  --bg: #0a0a0b;
+  --ink: #f4f3ee;
+  --dim: #a3a29c;
+  --line: #26262a;
+  --panel: rgb(10 10 11 / 0.62);
+  --hot: hsl(50 100% 62%);
+  --spectrum: hsl(6 100% 62%) 0 16.6%, hsl(30 100% 62%) 0 33.3%, hsl(50 100% 62%) 0 50%,
+    hsl(135 100% 62%) 0 66.6%, hsl(190 100% 62%) 0 83.3%, hsl(218 100% 62%) 0;
 
   --sans: 'Archivo', 'Helvetica Neue', Arial, sans-serif;
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   --ease-enter: cubic-bezier(0.22, 1, 0.36, 1);
-  --max: 1240px;
+  --max: 1280px;
   --col-gap: clamp(32px, 6vw, 96px);
-}
-
-/* dark: the system setting, unless the visitor picked light with the toggle */
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme='light']) {
-    --paper: #121211;
-    --paper-2: #1c1c1a;
-    --ink: #edece6;
-    --ink-2: #a9a79f;
-    --rule: #2e2d2a;
-    --signal: #ff5a44;
-    color-scheme: dark;
-  }
-}
-
-/* dark picked with the toggle */
-:root[data-theme='dark'] {
-  --paper: #121211;
-  --paper-2: #1c1c1a;
-  --ink: #edece6;
-  --ink-2: #a9a79f;
-  --rule: #2e2d2a;
-  --signal: #ff5a44;
-  color-scheme: dark;
 }

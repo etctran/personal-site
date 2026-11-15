@@ -5,7 +5,7 @@ import { site, projects, experience, about } from './content'
 import { renderFacts, renderProjects, renderExperience, renderAbout, renderContact } from './render'
 import { initName } from './name'
 import { initInk } from './ink'
-import { initTheme } from './theme'
+import { initField } from './field'
 
 function fill(selector: string, html: string): void {
   const el = document.querySelector<HTMLElement>(selector)
@@ -43,12 +43,13 @@ function initCopy(): void {
   })
 }
 
+// content first, so the field can measure where each section starts
 const lead = document.querySelector<HTMLElement>('#lead')
 if (lead) lead.textContent = site.lead
 fill('#facts', renderFacts(site.facts))
-fill('#projects .section-content', renderProjects(projects))
-fill('#experience .section-content', renderExperience(experience))
 fill('#about .section-content', renderAbout(about))
+fill('#experience .section-content', renderExperience(experience))
+fill('#projects .section-content', renderProjects(projects))
 fill('#contact .section-content', renderContact(site))
 initCopy()
 
@@ -56,5 +57,16 @@ const name = document.querySelector<HTMLElement>('#name')
 if (name) initName(name)
 const statement = document.querySelector<HTMLElement>('[data-ink]')
 if (statement) initInk(statement)
-const toggle = document.querySelector<HTMLButtonElement>('#theme')
-if (toggle) initTheme(toggle)
+
+const canvas = document.querySelector<HTMLCanvasElement>('#field')
+if (canvas) {
+  const field = initField(canvas)
+  // hovering (or focusing) a project floods the field with that project's colour
+  for (const row of document.querySelectorAll<HTMLElement>('[data-hue]')) {
+    const hue = Number(row.dataset.hue)
+    row.addEventListener('pointerenter', () => field.tint(hue))
+    row.addEventListener('pointerleave', () => field.tint(null))
+    row.addEventListener('focus', () => field.tint(hue))
+    row.addEventListener('blur', () => field.tint(null))
+  }
+}

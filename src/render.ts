@@ -17,9 +17,10 @@ export function renderProjects(list: Project[]): string {
   return list
     .map((p) => {
       const inner = `<h3>${esc(p.name)}</h3><p>${esc(p.line)}</p><p class="stack">${esc(p.stack.join(' · '))}</p><p class="year data">${esc(p.year)}</p>${p.url ? '<span class="arrow" aria-hidden="true">↗</span>' : '<span></span>'}`
+      const hue = p.hue === undefined ? '' : ` data-hue="${p.hue}" style="--h: ${p.hue}"`
       return p.url
-        ? `<a class="${cls('row', p.standin)}" href="${esc(p.url)}" target="_blank" rel="noopener noreferrer">${inner}</a>`
-        : `<div class="${cls('row', p.standin)}">${inner}</div>`
+        ? `<a class="${cls('row', p.standin)}"${hue} href="${esc(p.url)}" target="_blank" rel="noopener noreferrer">${inner}</a>`
+        : `<div class="${cls('row', p.standin)}"${hue}>${inner}</div>`
     })
     .join('')
 }
@@ -47,12 +48,13 @@ export function renderContact(s: { email: string; github: string; linkedin: stri
   return `
     <div class="email">
       <span class="email__addr" id="email">${esc(s.email)}</span>
+    </div>
+    <div class="bar" aria-hidden="true"></div>
+    <div class="close__links">
       <button class="btn copy" id="copy" type="button">
         <span class="copy__label">Copy email</span>
         <span class="copy__done" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2.5 7.5l3 3 6-7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Copied</span>
       </button>
-    </div>
-    <div class="close__links">
       ${ext(s.github, 'GitHub', 'link')}
       ${ext(s.linkedin, 'LinkedIn', 'link')}
     </div>`

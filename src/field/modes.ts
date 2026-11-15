@@ -1,0 +1,98 @@
+/** One particle. `a` is its fixed angle slot on a ring, `hx/hy` its home cell in the grid. */
+export interface Dot {
+  x: number
+  y: number
+  px: number
+  py: number
+  vx: number
+  vy: number
+  band: number
+  lane: number
+  s: number
+  a: number
+  hx: number
+  hy: number
+}
+
+/** Viewport size, clock (ms) and where the big ring (c, R) and the small core (k, r2) sit. */
+export interface Env {
+  w: number
+  h: number
+  t: number
+  cx: number
+  cy: number
+  R: number
+  kx: number
+  ky: number
+  r2: number
+}
+
+export type Mode = 'ring' | 'wave' | 'stream' | 'grid' | 'core'
+
+/** Flow formations move dots off the right edge, so those get wrapped back to the left. */
+export const FLOWS: Record<Mode, boolean> = { ring: false, wave: true, stream: true, grid: false, core: false }
+
+export const MAX_SPEED = 16
+
+function toward(q: Dot, tx: number, ty: number, k: number, out: [number, number]): void {
+  let vx = (tx - q.x) * k
+  let vy = (ty - q.y) * k
+  const sp = Math.hypot(vx, vy)
+  if (sp > MAX_SPEED) {
+    vx *= MAX_SPEED / sp
+    vy *= MAX_SPEED / sp
+  }
+  out[0] = vx
+  out[1] = vy
+}
+
+/** The velocity formation `mode` wants for dot `q`, written into `out`. */
+export function velocity(mode: Mode, q: Dot, e: Env, out: [number, number]): void {
+  switch (mode) {
+    case 'ring': {
+      // every dot keeps its own slot on a slowly turning ring, so the colours stay in arcs
+      const th = q.a + e.t * 0.0004
+      const r = e.R + q.band + Math.sin(e.t * 0.001 * q.s + q.lane * 50) * 6
+      return toward(q, e.cx + Math.cos(th) * r, e.cy + Math.sin(th) * r, 0.07, out)
+    }
+    case 'core': {
+      const th = q.a + e.t * 0.0009
+      const r = e.r2 + q.band * 0.45
+      return toward(q, e.kx + Math.cos(th) * r, e.ky + Math.sin(th) * r, 0.07, out)
+    }
+    case 'grid':
+      // a lattice that sways: slow waves roll through the rows and columns
+      return toward(
+        q,
+        q.hx + Math.sin(e.t * 0.0016 + q.hy * 0.018) * 8,
+        q.hy + Math.cos(e.t * 0.0013 + q.hx * 0.014) * 6,
+        0.08,
+        out,
+      )
+    case 'stream': {
+      // straight lanes, left to right: data through a pipeline
+      const ly = (0.05 + q.lane * 0.9) * e.h
+      out[0] = 2.4 * q.s + 1
+      out[1] = (ly - q.y) * 0.03 + Math.sin(q.x * 0.008 + q.lane * 50) * 0.35
+      return
+    }
+    case 'wave': {
+      // three ribbons that rise and fall as they travel
+      const r = Math.min(2, Math.floor(q.lane * 3))
+      const off = (q.lane * 3 - r - 0.5) * 46
+      const ty = e.h * (0.26 + 0.24 * r) + Math.sin(q.x * 0.0055 + e.t * 0.0007 + r * 2.1) * e.h * 0.085 + off
+      out[0] = (1.1 + 0.45 * r) * q.s + 0.5
+      out[1] = (ty - q.y) * 0.06
+      return
+    }
+  }
+}
+
+/** Home cells for `n` dots: an even lattice that fills a w×h viewport, in reading order. */
+export function gridHomes(n: number, w: number, h: number): Array<[number, number]> {
+  const cols = Math.max(1, Math.round(Math.sqrt((n * w) / h)))
+  const rows = Math.ceil(n / cols)
+  const sx = w / cols
+  const sy = h / rows
+  return Array.from({ length: n }, (_, i) => [((i % cols) + 0.5) * sx, (Math.floor(i / cols) + 0.5) * sy])
+}

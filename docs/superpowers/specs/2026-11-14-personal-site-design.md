@@ -126,6 +126,31 @@ Emil Kowalski design skills. Where the sections below disagree, this wins.
 - **Contact.** `hello@ethanctran.dev` via Cloudflare Email Routing
   (forwarding to Ethan's inbox) — set up at launch.
 
+## Revision 2026-11-15 (b) — "Live wire" supersedes the typeset-sheet look
+
+Ethan found the grey-paper design bland and picked "Live wire" from three live
+prototypes (claude.ai artifact "Ethan Tran Site Directions"). Where this
+disagrees with anything above or below, this wins.
+
+- **World.** One dark stage (`#0a0a0b`), white type (Archivo, wide and heavy),
+  six spectrum hues (6, 30, 50, 135, 190, 218 at 100 % / 62 %). No light theme,
+  no theme toggle.
+- **Particle field.** A fixed full-viewport canvas (`src/field/`) of up to
+  2,400 dots. Each `data-field` section names a formation and the field morphs
+  between them with scroll: hero `ring`, About `wave` (three ribbons),
+  Experience `stream` (pipeline lanes), Projects `grid` (swaying lattice),
+  Contact `core` (tight ring beside the address). Dots keep an angle slot so
+  ring colours stay in arcs. They scatter from the pointer; a click sends a
+  shockwave; hovering a project floods the field with that project's hue.
+  On load the ring closes in from off-screen. Reduced motion: one still ring.
+- **Page.** Hero (name, lead, two buttons), then About, Experience, Projects,
+  Contact — translucent panels with open gaps so the field shows between them.
+  Hero facts moved into About. No placeholders remain on the page.
+- **Type effects kept.** Name letters thin out under the pointer and ripple on
+  click; About statement inks in with scroll; scroll-driven heading stretch,
+  project rules (in each project's hue), spectrum experience rail, spectrum
+  progress line, address stretch.
+
 ## Decisions
 
 ### Stack (my call, from Ethan's existing tooling)

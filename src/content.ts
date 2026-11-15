@@ -1,5 +1,5 @@
-// All site copy. Anything with `standin: true` is a placeholder Ethan replaces;
-// it renders in a dashed box until then.
+// All site copy. An item with `standin: true` renders as a dashed placeholder box;
+// nothing uses it right now.
 
 export interface Fact {
   label: string
@@ -13,6 +13,8 @@ export interface Project {
   stack: string[]
   year: string
   url?: string
+  /** Hue (0-360) the particle field floods with while this row is hovered. */
+  hue?: number
   standin?: boolean
 }
 
@@ -33,7 +35,7 @@ export interface Standable {
 
 export const site = {
   name: 'Ethan Tran',
-  lead: 'Software engineer and computer science student at UNC Chapel Hill. I build AI-backed backend systems, mobile apps and computer-vision tools, most recently at IBM.',
+  lead: 'Software engineer at UNC Chapel Hill. I build AI-backed backend systems, mobile apps and computer-vision tools, most recently an incident-response platform at IBM.',
   email: 'hello@ethanctran.dev',
   github: 'https://github.com/etctran',
   linkedin: 'https://www.linkedin.com/in/ethanctran',
@@ -51,6 +53,7 @@ export const projects: Project[] = [
     stack: ['Python', 'Pub/Sub', 'Cloud Run', 'Redis', 'BigQuery', 'Terraform'],
     year: '2026',
     url: 'https://github.com/etctran/ClutchWatch',
+    hue: 218,
   },
   {
     name: 'FormIQ',
@@ -58,6 +61,7 @@ export const projects: Project[] = [
     stack: ['C++', 'Python', 'FastAPI', 'React'],
     year: '2026',
     url: 'https://github.com/etctran/FormIQ',
+    hue: 135,
   },
   {
     name: 'GraphSense',
@@ -65,6 +69,7 @@ export const projects: Project[] = [
     stack: ['Next.js', 'TypeScript', 'FastAPI', 'Gemini'],
     year: '2025',
     url: 'https://github.com/calebyhan/graphsense',
+    hue: 50,
   },
 ]
 
@@ -116,6 +121,5 @@ export const about: { paragraphs: Standable[] } = {
     {
       text: 'I’m a computer science student at UNC Chapel Hill, graduating in May 2028. I like building software people lean on every day: an inventory app for the campus food pantry, a patient chatbot at CancerLINC, an incident-response platform at IBM.',
     },
-    { text: 'One or two sentences on life outside code.', standin: true },
   ],
 }

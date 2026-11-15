@@ -24,6 +24,12 @@ test('only linked project rows show the outbound arrow', () => {
   expect(html.match(/class="arrow"/g)?.length).toBe(1)
 })
 
+test('each project row carries its hue for the hover colour flood', () => {
+  const html = renderProjects([{ name: 'A', line: 'a', stack: [], year: '2026', url: 'https://g', hue: 218 }])
+  expect(html).toContain('data-hue="218"')
+  expect(html).toContain('--h: 218')
+})
+
 test('stand-in items get the standin class, real ones do not', () => {
   const html = renderProjects([
     { name: 'Real', line: 'r', stack: [], year: '2026' },
@@ -64,6 +70,7 @@ test('contact shows the email as text and a copy button', () => {
   const html = renderContact(site)
   expect(html).toContain(`id="email">${site.email}<`)
   expect(html).toContain('id="copy"')
+  expect(html.indexOf('class="bar"')).toBeLessThan(html.indexOf('id="copy"')) // button sits under the address, clear of the particles
   expect(html).not.toMatch(/resume|résumé/i)
 })
 

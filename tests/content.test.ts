@@ -20,6 +20,11 @@ test('projects are ClutchWatch, FormIQ and GraphSense, newest first, each linked
   for (const p of projects) expect(p.url).toMatch(/^https:\/\/github\.com\//)
 })
 
+test('every project has a hue and nothing on the page is a placeholder', () => {
+  for (const p of projects) expect(p.hue).toBeGreaterThanOrEqual(0)
+  expect(all).not.toContain('"standin":true')
+})
+
 test('about has no timeline', () => {
   expect('timeline' in about).toBe(false)
 })
