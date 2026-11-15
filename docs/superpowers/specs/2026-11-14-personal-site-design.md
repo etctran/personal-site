@@ -194,7 +194,7 @@ clearly marked `TODO` placeholders until Ethan supplies the resume.
 - **Cloudflare Web Analytics** (free, no cookies, no consent banner, one
   toggle on the Pages project): page views, visitors, country, referrer,
   path, device. That's the requirement.
-- **Per-application links (free extra):** send `ethanctran.com/stripe`
+- **Per-application links (free extra):** send `ethanctran.dev/stripe`
   instead of the bare URL. Pages serves `index.html` for unknown paths (no
   `404.html` → SPA fallback), so each path shows up as its own row in the
   analytics path breakdown. No code needed; just don't ship a `404.html`.
@@ -204,7 +204,7 @@ clearly marked `TODO` placeholders until Ethan supplies the resume.
 
 ### Domain and hosting
 
-- **Domain:** `ethanctran.com` — checked available 2026-11-14 (`ethantran.com`
+- **Domain:** `ethanctran.dev` — checked available 2026-11-14 (`ethantran.com`
   and `.dev` are taken; `.me` and `.io` also free). Register at **Cloudflare
   Registrar** (at-cost, ~$10/yr, no renewal markup) so DNS + Pages custom
   domain is one click. Porkbun is the fallback if Cloudflare Registrar
@@ -245,5 +245,5 @@ clearly marked `TODO` placeholders until Ethan supplies the resume.
    experience rail.
 4. **Polish + SEO:** OG image, favicon, metadata, Lighthouse to target,
    accessibility audit.
-5. **Domain + launch:** register `ethanctran.com`, attach to Pages, enable Web
+5. **Domain + launch:** register `ethanctran.dev`, attach to Pages, enable Web
    Analytics, verify path-based tracking, fill in real resume content, ship.

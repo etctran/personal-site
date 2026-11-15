@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Ship `ethanctran.com` — a one-page, dark, warm-accent personal site with a canvas particle hero ("33 pose points do a squat, then assemble into ETHAN TRAN"), scroll-triggered motion, projects/experience/about/contact rendered from one content file, deployed on Cloudflare Pages with cookie-less visit counts.
+**Goal:** Ship `ethanctran.dev` — a one-page, dark, warm-accent personal site with a canvas particle hero ("33 pose points do a squat, then assemble into ETHAN TRAN"), scroll-triggered motion, projects/experience/about/contact rendered from one content file, deployed on Cloudflare Pages with cookie-less visit counts.
 
 **Architecture:** Vite + vanilla TypeScript + plain CSS. `index.html` carries all four sections' containers and a real `<h1>` (no-JS and screen-reader path); `src/render.ts` fills them from `src/content.ts` as HTML strings; `src/hero/` is a self-contained requestAnimationFrame particle system on a `<canvas>`; `src/motion.ts` adds anime.js v4 reveals after render. No framework, no CSS framework.
 
@@ -373,7 +373,7 @@ git add -A && git commit -m "feat: scroll reveals, heading staggers, nav blur, e
 
 - [ ] **Step 1: Metadata**
 
-In `<head>`: `description`, canonical `https://ethanctran.com/`, `og:title|description|image|url|type`, `twitter:card=summary_large_image`, `theme-color=#0b0d10`, `<link rel="icon" href="/favicon.svg">`, preload the two woff2 files. `robots.txt`: `User-agent: *` / `Allow: /`.
+In `<head>`: `description`, canonical `https://ethanctran.dev/`, `og:title|description|image|url|type`, `twitter:card=summary_large_image`, `theme-color=#0b0d10`, `<link rel="icon" href="/favicon.svg">`, preload the two woff2 files. `robots.txt`: `User-agent: *` / `Allow: /`.
 
 - [ ] **Step 2: OG image**
 
@@ -398,11 +398,11 @@ git add -A && git commit -m "feat: metadata, OG image, lighthouse fixes" && git 
 **Files:**
 - Modify: `src/content.ts`, `public/resume.pdf`, `README.md`
 
-- [x] **Step 1: (Ethan) Register the domain** — done 2026-11-14. Record the exact domain and registrar in `README.md` and replace `ethanctran.com` throughout this plan/spec if a different name was bought.
+- [x] **Step 1: (Ethan) Register the domain** — done 2026-11-14. Record the exact domain and registrar in `README.md` and replace `ethanctran.dev` throughout this plan/spec if a different name was bought.
 
 - [ ] **Step 2: (Ethan) Attach it to Pages**
 
-*If registered at Cloudflare:* Pages project → Custom domains → Set up a custom domain → `ethanctran.com` → Activate (DNS record is created automatically). Repeat for `www.ethanctran.com`; Cloudflare redirects `www` → apex. SSL is automatic; allow a few minutes.
+*If registered at Cloudflare:* Pages project → Custom domains → Set up a custom domain → `ethanctran.dev` → Activate (DNS record is created automatically). Repeat for `www.ethanctran.dev`; Cloudflare redirects `www` → apex. SSL is automatic; allow a few minutes.
 
 *If registered elsewhere (Namecheap, GoDaddy, Porkbun, Google/Squarespace…):* easiest is to move DNS to Cloudflare first — Cloudflare dashboard → Add a domain → enter it → Free plan → copy the two nameservers Cloudflare gives → paste them into the registrar's "Nameservers / DNS" settings (replacing the registrar's own). Propagation takes minutes to a few hours; Cloudflare emails when active. Then do the "registered at Cloudflare" steps above. (Alternative without moving DNS: add a `CNAME` for `@` and `www` → `<project>.pages.dev` at the registrar, then add both as custom domains in Pages — but apex CNAMEs aren't supported by every registrar, so moving nameservers is the reliable path.)
 
@@ -412,7 +412,7 @@ Pages project → Metrics → Web Analytics → Enable. (Cloudflare injects the 
 
 - [ ] **Step 4: Verify domain, HTTPS, and path tracking**
 
-Run: `curl -sI https://ethanctran.com/ | head -1` → `HTTP/2 200`; `curl -sI https://www.ethanctran.com/ | head -1` → `HTTP/2 301`; `curl -sI https://ethanctran.com/test-link | head -1` → `HTTP/2 200`. Open `https://ethanctran.com/test-link` once in a real browser, wait ~5 min, confirm `/test-link` appears under Web Analytics → Paths.
+Run: `curl -sI https://ethanctran.dev/ | head -1` → `HTTP/2 200`; `curl -sI https://www.ethanctran.dev/ | head -1` → `HTTP/2 301`; `curl -sI https://ethanctran.dev/test-link | head -1` → `HTTP/2 200`. Open `https://ethanctran.dev/test-link` once in a real browser, wait ~5 min, confirm `/test-link` appears under Web Analytics → Paths.
 
 - [ ] **Step 5: Real content**
 
@@ -420,7 +420,7 @@ Replace every `TODO:` in `src/content.ts` with Ethan's resume content; drop the 
 
 - [ ] **Step 6: Final checks and commit**
 
-Lighthouse again on `https://ethanctran.com` (Task 7 Step 3 command) — targets still met. Then:
+Lighthouse again on `https://ethanctran.dev` (Task 7 Step 3 command) — targets still met. Then:
 
 ```bash
 git add -A && git commit -m "feat: real content and resume; launch" && git push
@@ -428,4 +428,4 @@ git add -A && git commit -m "feat: real content and resume; launch" && git push
 
 - [ ] **Step 7: Per-application links (how to use, no code)**
 
-For each application, send `https://ethanctran.com/<company>` (e.g. `/stripe`). Each path shows as its own row in Web Analytics → Paths, so you can see which companies opened it and when. Resume opens show up as `/resume.pdf`.
+For each application, send `https://ethanctran.dev/<company>` (e.g. `/stripe`). Each path shows as its own row in Web Analytics → Paths, so you can see which companies opened it and when. Resume opens show up as `/resume.pdf`.
