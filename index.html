@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ethan Tran — Software Engineer</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preload" href="/fonts/inter.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/jetbrains-mono.woff2" as="font" type="font/woff2" crossorigin />
+  </head>
+  <body>
+    <nav id="nav" class="nav" aria-label="Primary">
+      <a class="nav__brand" href="#top">ethan tran</a>
+      <div class="nav__links">
+        <a href="#projects">projects</a>
+        <a href="#experience">experience</a>
+        <a href="#about">about</a>
+        <a href="/resume.pdf">resume</a>
+      </div>
+    </nav>
+
+    <main id="top">
+      <header id="hero" class="hero">
+        <canvas id="hero-canvas" class="hero__canvas" aria-hidden="true"></canvas>
+        <div class="hero__inner section-body">
+          <h1 id="hero-name" class="hero__name">Ethan Tran</h1>
+          <div id="hero-copy" class="hero__copy"></div>
+        </div>
+      </header>
+
+      <section id="projects" class="section">
+        <div class="section-body">
+          <p class="label">01 / Projects</p>
+          <h2>Projects</h2>
+          <div class="section-content"></div>
+        </div>
+      </section>
+
+      <section id="experience" class="section">
+        <div class="section-body">
+          <p class="label">02 / Experience</p>
+          <h2>Experience</h2>
+          <div class="section-content"></div>
+        </div>
+      </section>
+
+      <section id="about" class="section">
+        <div class="section-body">
+          <p class="label">03 / About</p>
+          <h2>About</h2>
+          <div class="section-content"></div>
+        </div>
+      </section>
+
+      <section id="contact" class="section section--contact">
+        <div class="section-body">
+          <p class="label">04 / Contact</p>
+          <h2>Say hi</h2>
+          <div class="section-content"></div>
+        </div>
+      </section>
+    </main>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
