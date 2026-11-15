@@ -31,6 +31,13 @@ test('every project has a hue and nothing on the page is a placeholder', () => {
   expect(all).not.toContain('"standin":true')
 })
 
+test('the About statement keeps the opening and ends on hobbies', () => {
+  const lede = about.paragraphs[0].text
+  expect(lede).toMatch(/^I’m a computer science student at UNC Chapel Hill, graduating in May 2028\. I like building software people lean on every day\./)
+  expect(lede).toMatch(/basketball, video games and anime/)
+  expect(lede).not.toMatch(/food pantry|CancerLINC|IBM/)
+})
+
 test('about has no timeline', () => {
   expect('timeline' in about).toBe(false)
 })

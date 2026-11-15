@@ -120,7 +120,7 @@ export const experience: Role[] = [
 export const about: { paragraphs: Standable[]; photo?: string } = {
   paragraphs: [
     {
-      text: 'I’m a computer science student at UNC Chapel Hill, graduating in May 2028. I like building software people lean on every day: an inventory app for the campus food pantry, a patient chatbot at CancerLINC, an incident-response platform at IBM.',
+      text: 'I’m a computer science student at UNC Chapel Hill, graduating in May 2028. I like building software people lean on every day. Outside of code, I’m into basketball, video games and anime.',
     },
   ],
 }

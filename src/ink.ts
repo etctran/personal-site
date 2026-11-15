@@ -1,12 +1,14 @@
 /**
- * How many of `n` words are inked for a statement whose top is `top` px from
- * the viewport top. Inking starts as the top passes 85 % of the viewport and
- * finishes once the whole statement is above the middle.
+ * How many of `n` words are bright for a statement whose top is `top` px from
+ * the viewport top. Every word is bright the moment the whole statement is on
+ * screen (its bottom edge has come into view); the brightening happens over
+ * the scroll just before that. A statement taller than the viewport finishes
+ * once its top is near the top of the screen.
  */
 export function inkedCount(top: number, height: number, viewport: number, n: number): number {
-  const start = viewport * 0.85
-  const span = viewport * 0.35 + height
-  const p = Math.min(1, Math.max(0, (start - top) / span))
+  const end = Math.max(viewport * 0.15, viewport - height)
+  const start = Math.max(viewport * 0.9, end + viewport * 0.2)
+  const p = Math.min(1, Math.max(0, (start - top) / (start - end)))
   return Math.round(p * n)
 }
 
