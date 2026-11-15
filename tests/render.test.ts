@@ -54,13 +54,10 @@ test('facts render as a definition list row per fact', () => {
   expect(html).toContain('<div class="standin">')
 })
 
-test('about renders paragraphs and a year timeline', () => {
-  const html = renderAbout({
-    paragraphs: [{ text: 'Hi' }],
-    timeline: [{ year: '2026', text: 'Now' }],
-  })
+test('about renders its paragraphs and no timeline', () => {
+  const html = renderAbout({ paragraphs: [{ text: 'Hi' }] })
   expect(html).toContain('<p class="about__lede" data-ink>Hi</p>')
-  expect(html).toContain('2026')
+  expect(html).not.toContain('<ol')
 })
 
 test('contact shows the email as text and a copy button', () => {

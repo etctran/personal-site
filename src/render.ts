@@ -1,4 +1,4 @@
-import type { Fact, Project, Role, Standable, TimelineItem } from './content'
+import type { Fact, Project, Role, Standable } from './content'
 
 const ENT: Record<string, string> = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }
 const esc = (s: string): string => s.replace(/[&<>"']/g, (c) => ENT[c])
@@ -33,17 +33,14 @@ export function renderExperience(list: Role[]): string {
     .join('')
 }
 
-export function renderAbout(a: { paragraphs: Standable[]; timeline: TimelineItem[] }): string {
+export function renderAbout(a: { paragraphs: Standable[] }): string {
   const paras = a.paragraphs
     .map((p, i) => {
       if (p.standin) return `<p class="standin">${esc(p.text)}</p>`
       return i === 0 ? `<p class="about__lede" data-ink>${esc(p.text)}</p>` : `<p>${esc(p.text)}</p>`
     })
     .join('')
-  const items = a.timeline
-    .map((t) => `<li${t.standin ? ' class="standin"' : ''}><span class="data">${esc(t.year)}</span><span>${esc(t.text)}</span></li>`)
-    .join('')
-  return `<div class="about__text">${paras}</div><ol class="brief">${items}</ol>`
+  return `<div class="about__text">${paras}</div>`
 }
 
 export function renderContact(s: { email: string; github: string; linkedin: string }): string {

@@ -1,5 +1,6 @@
 import './styles/tokens.css'
 import './styles/site.css'
+import './styles/scroll.css'
 import { site, projects, experience, about } from './content'
 import { renderFacts, renderProjects, renderExperience, renderAbout, renderContact } from './render'
 import { initName } from './name'

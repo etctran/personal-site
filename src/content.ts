@@ -31,10 +31,6 @@ export interface Standable {
   standin?: boolean
 }
 
-export interface TimelineItem extends Standable {
-  year: string
-}
-
 export const site = {
   name: 'Ethan Tran',
   lead: 'Software engineer and computer science student at UNC Chapel Hill. I build AI-backed backend systems, mobile apps and computer-vision tools, most recently at IBM.',
@@ -44,13 +40,18 @@ export const site = {
   facts: [
     { label: 'Studying', value: 'B.S. Computer Science, UNC Chapel Hill · May 2028' },
     { label: 'Based in', value: 'Chapel Hill, NC' },
-    { label: 'Looking for', value: 'Summer 2027 software engineering internship', standin: true },
-    { label: 'Hackathons', value: 'Two wins, including 1st of 40+ teams at VT Hacks 13' },
     { label: 'Works in', value: 'Python, C++, TypeScript, Swift, React, FastAPI, Kubernetes' },
   ] as Fact[],
 }
 
 export const projects: Project[] = [
+  {
+    name: 'ClutchWatch',
+    line: 'Real-time NBA pipeline on Google Cloud that watches every live game and posts to Discord when one gets close late. Replays a full 686,008-event season at 1,000 events a second with none lost.',
+    stack: ['Python', 'Pub/Sub', 'Cloud Run', 'Redis', 'BigQuery', 'Terraform'],
+    year: '2026',
+    url: 'https://github.com/etctran/ClutchWatch',
+  },
   {
     name: 'FormIQ',
     line: 'Scores exercise form from a phone video: finds each rep and flags faults across eight lifts.',
@@ -60,15 +61,10 @@ export const projects: Project[] = [
   },
   {
     name: 'GraphSense',
-    line: 'First place at VT Hacks 13. Three Gemini agents profile a dataset and recommend the best of ten chart types for it.',
-    stack: ['React', 'TypeScript', 'Python', 'Gemini API'],
-    year: '2026',
-  },
-  {
-    name: 'TA scheduler',
-    line: 'Office-hours shifts, swaps and a shared schedule for 70+ UNC CS TAs, replacing a paid service.',
-    stack: ['Next.js', 'PostgreSQL', 'Supabase'],
+    line: 'First place of 40+ teams at VT Hacks 13. Upload a dataset and three Gemini agents profile it, recommend charts and lay them out on a shared infinite canvas.',
+    stack: ['Next.js', 'TypeScript', 'FastAPI', 'Gemini'],
     year: '2025',
+    url: 'https://github.com/calebyhan/graphsense',
   },
 ]
 
@@ -110,23 +106,16 @@ export const experience: Role[] = [
     start: 'Aug 2025',
     end: 'Present',
     bullets: [
-      'Built the office-hours scheduler the course’s 70+ TAs use for shifts and swaps, in Next.js, PostgreSQL and Supabase.',
       'Lead 10 office hours a week and grade exams for 900+ students in Intro to Programming (Python).',
     ],
   },
 ]
 
-export const about: { paragraphs: Standable[]; timeline: TimelineItem[] } = {
+export const about: { paragraphs: Standable[] } = {
   paragraphs: [
     {
-      text: 'I’m a computer science student at UNC Chapel Hill, graduating in May 2028. I like building software people lean on every day: an inventory app for the campus food pantry, a scheduler for my fellow TAs, an incident-response platform at IBM.',
+      text: 'I’m a computer science student at UNC Chapel Hill, graduating in May 2028. I like building software people lean on every day: an inventory app for the campus food pantry, a patient chatbot at CancerLINC, an incident-response platform at IBM.',
     },
     { text: 'One or two sentences on life outside code.', standin: true },
-  ],
-  timeline: [
-    { year: '2024', text: 'Started computer science at UNC Chapel Hill.' },
-    { year: '2025', text: 'Began teaching Intro to Programming as a TA.' },
-    { year: '2026', text: 'Software engineer intern at IBM.' },
-    { year: '2028', text: 'Graduating with a B.S. in Computer Science.' },
   ],
 }
