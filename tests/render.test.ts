@@ -16,6 +16,14 @@ test('project with a url is a link row; without one it is a plain row', () => {
   expect(html).not.toContain('undefined')
 })
 
+test('only linked project rows show the outbound arrow', () => {
+  const html = renderProjects([
+    { name: 'A', line: 'a', stack: [], year: '2026', url: 'https://g' },
+    { name: 'B', line: 'b', stack: [], year: '2025' },
+  ])
+  expect(html.match(/class="arrow"/g)?.length).toBe(1)
+})
+
 test('stand-in items get the standin class, real ones do not', () => {
   const html = renderProjects([
     { name: 'Real', line: 'r', stack: [], year: '2026' },

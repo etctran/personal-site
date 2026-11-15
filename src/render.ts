@@ -16,7 +16,7 @@ export function renderFacts(facts: Fact[]): string {
 export function renderProjects(list: Project[]): string {
   return list
     .map((p) => {
-      const inner = `<h3>${esc(p.name)}</h3><p>${esc(p.line)}</p><p class="stack">${esc(p.stack.join(' · '))}</p><p class="year data">${esc(p.year)}</p><span class="arrow" aria-hidden="true">↗</span>`
+      const inner = `<h3>${esc(p.name)}</h3><p>${esc(p.line)}</p><p class="stack">${esc(p.stack.join(' · '))}</p><p class="year data">${esc(p.year)}</p>${p.url ? '<span class="arrow" aria-hidden="true">↗</span>' : '<span></span>'}`
       return p.url
         ? `<a class="${cls('row', p.standin)}" href="${esc(p.url)}" target="_blank" rel="noopener noreferrer">${inner}</a>`
         : `<div class="${cls('row', p.standin)}">${inner}</div>`
