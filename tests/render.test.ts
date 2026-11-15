@@ -59,7 +59,7 @@ test('about renders paragraphs and a year timeline', () => {
     paragraphs: [{ text: 'Hi' }],
     timeline: [{ year: '2026', text: 'Now' }],
   })
-  expect(html).toContain('<p>Hi</p>')
+  expect(html).toContain('<p class="about__lede" data-ink>Hi</p>')
   expect(html).toContain('2026')
 })
 

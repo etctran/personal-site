@@ -34,7 +34,12 @@ export function renderExperience(list: Role[]): string {
 }
 
 export function renderAbout(a: { paragraphs: Standable[]; timeline: TimelineItem[] }): string {
-  const paras = a.paragraphs.map((p) => (p.standin ? `<p class="standin">${esc(p.text)}</p>` : `<p>${esc(p.text)}</p>`)).join('')
+  const paras = a.paragraphs
+    .map((p, i) => {
+      if (p.standin) return `<p class="standin">${esc(p.text)}</p>`
+      return i === 0 ? `<p class="about__lede" data-ink>${esc(p.text)}</p>` : `<p>${esc(p.text)}</p>`
+    })
+    .join('')
   const items = a.timeline
     .map((t) => `<li${t.standin ? ' class="standin"' : ''}><span class="data">${esc(t.year)}</span><span>${esc(t.text)}</span></li>`)
     .join('')
@@ -45,7 +50,10 @@ export function renderContact(s: { email: string; github: string; linkedin: stri
   return `
     <div class="email">
       <span class="email__addr" id="email">${esc(s.email)}</span>
-      <button class="btn" id="copy" type="button">Copy email</button>
+      <button class="btn copy" id="copy" type="button">
+        <span class="copy__label">Copy email</span>
+        <span class="copy__done" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2.5 7.5l3 3 6-7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Copied</span>
+      </button>
     </div>
     <div class="close__links">
       ${ext(s.github, 'GitHub', 'link')}

@@ -7,16 +7,30 @@
     <meta name="description" content="Ethan Tran, software engineer: projects, experience and how to get in touch." />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="preload" href="/fonts/archivo.woff2" as="font" type="font/woff2" crossorigin />
+    <script>
+      try {
+        var t = localStorage.getItem('theme')
+        if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t)
+      } catch (e) {}
+    </script>
   </head>
   <body>
     <div class="wrap">
       <nav id="nav" class="nav" aria-label="Primary">
         <a class="nav__name" href="#top">Ethan Tran</a>
+        <div class="nav__end">
         <div class="nav__links">
           <a class="link" href="#projects">Projects</a>
           <a class="link" href="#experience">Experience</a>
           <a class="link" href="#about">About</a>
           <a class="link" href="#contact">Contact</a>
+        </div>
+        <button class="theme" id="theme" type="button" aria-label="Switch theme">
+          <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
+            <circle cx="9" cy="9" r="7.2" fill="none" stroke="currentColor" stroke-width="1.5" />
+            <path d="M9 1.8a7.2 7.2 0 0 1 0 14.4z" fill="currentColor" />
+          </svg>
+        </button>
         </div>
       </nav>
 

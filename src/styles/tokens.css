@@ -15,6 +15,7 @@
   --ink-2: #4b4a45;
   --rule: #c4c2ba;
   --signal: #c42c1b;
+  color-scheme: light;
 
   --sans: 'Archivo', 'Helvetica Neue', Arial, sans-serif;
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
@@ -23,8 +24,9 @@
   --col-gap: clamp(32px, 6vw, 96px);
 }
 
+/* dark: the system setting, unless the visitor picked light with the toggle */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme='light']) {
     --paper: #121211;
     --paper-2: #1c1c1a;
     --ink: #edece6;
@@ -33,4 +35,15 @@
     --signal: #ff5a44;
     color-scheme: dark;
   }
+}
+
+/* dark picked with the toggle */
+:root[data-theme='dark'] {
+  --paper: #121211;
+  --paper-2: #1c1c1a;
+  --ink: #edece6;
+  --ink-2: #a9a79f;
+  --rule: #2e2d2a;
+  --signal: #ff5a44;
+  color-scheme: dark;
 }

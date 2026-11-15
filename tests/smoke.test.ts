@@ -17,6 +17,12 @@ test('no canvas hero or eyebrow section numbers remain', () => {
   expect(html).not.toMatch(/0\d \/ /)
 })
 
+test('theme toggle exists and the saved theme is applied before first paint', () => {
+  expect(html).toMatch(/<button[^>]*id="theme"/)
+  const head = html.slice(0, html.indexOf('</head>'))
+  expect(head).toContain('data-theme')
+})
+
 test('the résumé is not linked or shipped', () => {
   expect(html).not.toMatch(/resume|résumé/i)
   expect(() => readFileSync('public/resume.pdf')).toThrow()

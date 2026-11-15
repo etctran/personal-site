@@ -440,6 +440,107 @@ footer {
   border-top: 1px solid var(--rule);
 }
 
+/* theme toggle: the half-filled disc turns over with the theme */
+.theme {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  margin-left: 6px;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+  transition: background-color 150ms var(--ease-out), transform 160ms var(--ease-out);
+}
+
+.theme svg {
+  transition: transform 520ms var(--ease-out);
+}
+
+.theme[data-state='dark'] svg {
+  transform: rotate(180deg);
+}
+
+.theme:active {
+  transform: scale(0.92);
+}
+
+.nav__end {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+/* the new theme opens as a circle from the toggle; theme.ts drives the clip */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+/* about statement: words ink in with scroll (ink.ts adds .ink-scroll) */
+.about__lede {
+  font-size: clamp(1.45rem, 2.5vw, 2.05rem);
+  font-stretch: 112%;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  line-height: 1.3;
+  text-wrap: pretty;
+}
+
+.ink-scroll .w {
+  color: var(--ink-2);
+  transition: color 220ms var(--ease-out);
+}
+
+.ink-scroll .w.on {
+  color: var(--ink);
+}
+
+/* copy button: label blurs out, check blurs in */
+.copy {
+  display: inline-grid;
+  justify-items: center;
+}
+
+.copy__label,
+.copy__done {
+  grid-area: 1 / 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: opacity 180ms var(--ease-out), filter 180ms var(--ease-out), transform 180ms var(--ease-out);
+}
+
+.copy__done {
+  opacity: 0;
+  filter: blur(4px);
+  transform: translateY(4px);
+}
+
+.copy.is-copied .copy__label {
+  opacity: 0;
+  filter: blur(4px);
+  transform: translateY(-4px);
+}
+
+.copy.is-copied .copy__done {
+  opacity: 1;
+  filter: none;
+  transform: none;
+}
+
+/* project names: linked rows stretch their name wider on hover */
+.row h3 {
+  font-stretch: normal;
+  font-weight: normal;
+  font-variation-settings: 'wdth' 112, 'wght' 700;
+  transition: font-variation-settings 260ms var(--ease-out);
+}
+
 /* hover only where there is a real pointer */
 @media (hover: hover) and (pointer: fine) {
   .link:hover {
@@ -463,6 +564,12 @@ footer {
   a.row:hover .arrow {
     transform: translate(2px, -2px);
     color: var(--signal);
+  }
+  a.row:hover h3 {
+    font-variation-settings: 'wdth' 125, 'wght' 800;
+  }
+  .theme:hover {
+    background: var(--paper-2);
   }
 }
 
@@ -534,8 +641,18 @@ footer {
   }
   .btn,
   .row .arrow,
-  .btn svg {
+  .btn svg,
+  .row h3,
+  .theme,
+  .theme svg,
+  .copy__label,
+  .copy__done {
     transition-property: background-color, color, opacity !important;
+  }
+  .copy__label,
+  .copy__done {
+    filter: none !important;
+    transform: none !important;
   }
   .btn:hover,
   .btn:active,
