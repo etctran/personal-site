@@ -116,8 +116,9 @@ export const experience: Role[] = [
   },
 ]
 
-// Set `photo` to a file in public/ (for example '/me.jpg') to replace the monogram in About.
+// `photo` is a square image in public/; remove it to fall back to the "ET" monogram.
 export const about: { paragraphs: Standable[]; photo?: string } = {
+  photo: '/me.jpg',
   paragraphs: [
     {
       text: 'I’m a computer science student at UNC Chapel Hill, graduating in May 2028. I like building software people lean on every day. Outside of code, I’m into basketball, video games and anime.',

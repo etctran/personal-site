@@ -38,6 +38,11 @@ test('the About statement keeps the opening and ends on hobbies', () => {
   expect(lede).not.toMatch(/food pantry|CancerLINC|IBM/)
 })
 
+test('the About portrait is a real photo that ships with the site', () => {
+  expect(about.photo).toBe('/me.jpg')
+  expect(readFileSync('public/me.jpg').length).toBeGreaterThan(5000)
+})
+
 test('about has no timeline', () => {
   expect('timeline' in about).toBe(false)
 })
