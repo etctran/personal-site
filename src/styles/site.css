@@ -344,7 +344,7 @@ a.row::before {
   max-width: 66ch;
 }
 
-/* placeholders Ethan replaces from his résumé */
+/* placeholders Ethan replaces */
 .standin {
   border: 1px dashed var(--rule);
   border-radius: 10px;

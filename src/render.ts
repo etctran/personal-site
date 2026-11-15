@@ -41,7 +41,7 @@ export function renderAbout(a: { paragraphs: Standable[]; timeline: TimelineItem
   return `<div class="about__text">${paras}</div><ol class="brief">${items}</ol>`
 }
 
-export function renderContact(s: { email: string; github: string; linkedin: string; resumeUrl: string }): string {
+export function renderContact(s: { email: string; github: string; linkedin: string }): string {
   return `
     <div class="email">
       <span class="email__addr" id="email">${esc(s.email)}</span>
@@ -50,6 +50,5 @@ export function renderContact(s: { email: string; github: string; linkedin: stri
     <div class="close__links">
       ${ext(s.github, 'GitHub', 'link')}
       ${ext(s.linkedin, 'LinkedIn', 'link')}
-      <a class="link" href="${esc(s.resumeUrl)}">Résumé (PDF)</a>
     </div>`
 }

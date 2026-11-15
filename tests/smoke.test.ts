@@ -17,6 +17,11 @@ test('no canvas hero or eyebrow section numbers remain', () => {
   expect(html).not.toMatch(/0\d \/ /)
 })
 
+test('the résumé is not linked or shipped', () => {
+  expect(html).not.toMatch(/resume|résumé/i)
+  expect(() => readFileSync('public/resume.pdf')).toThrow()
+})
+
 test('no 404.html is shipped (keeps Pages SPA fallback)', () => {
   expect(() => readFileSync('public/404.html')).toThrow()
 })

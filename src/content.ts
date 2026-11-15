@@ -41,7 +41,6 @@ export const site = {
   email: 'hello@ethanctran.dev',
   github: 'https://github.com/etctran',
   linkedin: 'https://www.linkedin.com/in/ethanctran',
-  resumeUrl: '/resume.pdf',
   facts: [
     { label: 'Studying', value: 'B.S. Computer Science, UNC Chapel Hill · May 2028' },
     { label: 'Based in', value: 'Chapel Hill, NC' },

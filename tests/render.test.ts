@@ -67,6 +67,7 @@ test('contact shows the email as text and a copy button', () => {
   const html = renderContact(site)
   expect(html).toContain(`id="email">${site.email}<`)
   expect(html).toContain('id="copy"')
+  expect(html).not.toMatch(/resume|résumé/i)
 })
 
 test('user text is escaped', () => {
