@@ -44,6 +44,13 @@ export function renderAbout(a: { paragraphs: Standable[] }): string {
   return `<div class="about__text">${paras}</div>`
 }
 
+/** The portrait in About: the photo inside the six-colour ring, or a monogram until there is one. */
+export function renderPortrait(photo: string | undefined): string {
+  return photo
+    ? `<div class="portrait"><img src="${esc(photo)}" alt="Ethan Tran" width="480" height="480" loading="lazy" decoding="async" /></div>`
+    : `<div class="portrait portrait--empty" aria-hidden="true"><span>ET</span></div>`
+}
+
 export function renderContact(s: { email: string; github: string; linkedin: string }): string {
   return `
     <div class="email">

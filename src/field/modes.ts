@@ -1,4 +1,5 @@
-/** One particle. `a` is its fixed angle slot on a ring, `hx/hy` its home cell in the grid. */
+/** One particle. `a` is its fixed angle slot on a ring, `o` its place in the queue (0..1) when a
+ * formation changes, `hx/hy` its home cell in the grid, `tx/ty` its spot in the intro's name. */
 export interface Dot {
   x: number
   y: number
@@ -10,8 +11,11 @@ export interface Dot {
   lane: number
   s: number
   a: number
+  o: number
   hx: number
   hy: number
+  tx: number
+  ty: number
 }
 
 /** Viewport size, clock (ms) and where the big ring (c, R) and the small core (k, r2) sit. */
@@ -27,10 +31,10 @@ export interface Env {
   r2: number
 }
 
-export type Mode = 'ring' | 'wave' | 'stream' | 'grid' | 'core'
+export type Mode = 'ring' | 'wave' | 'stream' | 'grid' | 'core' | 'name'
 
 /** Flow formations move dots off the right edge, so those get wrapped back to the left. */
-export const FLOWS: Record<Mode, boolean> = { ring: false, wave: true, stream: true, grid: false, core: false }
+export const FLOWS: Record<Mode, boolean> = { ring: false, wave: true, stream: true, grid: false, core: false, name: false }
 
 export const MAX_SPEED = 16
 
@@ -66,6 +70,15 @@ export function velocity(mode: Mode, q: Dot, e: Env, out: [number, number]): voi
         q,
         q.hx + Math.sin(e.t * 0.0016 + q.hy * 0.018) * 8,
         q.hy + Math.cos(e.t * 0.0013 + q.hx * 0.014) * 6,
+        0.08,
+        out,
+      )
+    case 'name':
+      // the intro: every dot holds a point inside a letter, with a faint shimmer
+      return toward(
+        q,
+        q.tx + Math.sin(e.t * 0.002 + q.ty * 0.03) * 2.5,
+        q.ty + Math.cos(e.t * 0.0017 + q.tx * 0.02) * 2.5,
         0.08,
         out,
       )

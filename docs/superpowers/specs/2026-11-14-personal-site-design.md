@@ -151,6 +151,21 @@ disagrees with anything above or below, this wins.
   project rules (in each project's hue), spectrum experience rail, spectrum
   progress line, address stretch.
 
+## Revision 2026-11-15 (c) — intro, staggered transitions, portrait
+
+- **Intro.** On a fresh visit to the top of the page (no hash, motion allowed,
+  not yet entered in this tab) the page is held back and the particles spell
+  ETHAN / TRAN in six colours. Enter, Space, click, tap, wheel or swipe goes
+  in: the name bursts apart, the dots gather into the hero ring, and the hero's
+  entrance plays. Remembered per tab in `sessionStorage`.
+- **Transitions.** Dots change formation one after another (`staggered`), not
+  all at once: by colour around a ring, by lane into a flow. Scroll speed drags
+  the dots with the page, and trails lengthen while things are changing.
+- **Name once.** The nav carries links only; the h1 is the only name on screen.
+- **Portrait.** A circle in About inside the six-colour ring; shows an "ET"
+  monogram until `about.photo` is set in `src/content.ts`.
+- **Link previews.** Open Graph / Twitter tags and `public/og.jpg`.
+
 ## Decisions
 
 ### Stack (my call, from Ethan's existing tooling)

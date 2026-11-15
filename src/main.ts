@@ -2,10 +2,11 @@ import './styles/tokens.css'
 import './styles/site.css'
 import './styles/scroll.css'
 import { site, projects, experience, about } from './content'
-import { renderFacts, renderProjects, renderExperience, renderAbout, renderContact } from './render'
+import { renderFacts, renderProjects, renderExperience, renderAbout, renderContact, renderPortrait } from './render'
 import { initName } from './name'
 import { initInk } from './ink'
 import { initField } from './field'
+import { initIntro } from './intro'
 
 function fill(selector: string, html: string): void {
   const el = document.querySelector<HTMLElement>(selector)
@@ -47,26 +48,40 @@ function initCopy(): void {
 const lead = document.querySelector<HTMLElement>('#lead')
 if (lead) lead.textContent = site.lead
 fill('#facts', renderFacts(site.facts))
+fill('#portrait', renderPortrait(about.photo))
 fill('#about .section-content', renderAbout(about))
 fill('#experience .section-content', renderExperience(experience))
 fill('#projects .section-content', renderProjects(projects))
 fill('#contact .section-content', renderContact(site))
 initCopy()
 
-const name = document.querySelector<HTMLElement>('#name')
-if (name) initName(name)
 const statement = document.querySelector<HTMLElement>('[data-ink]')
 if (statement) initInk(statement)
 
+// the hero's entrance starts when the visitor arrives: straight away, or on leaving the intro
+const name = document.querySelector<HTMLElement>('#name')
+const startHero = (): void => {
+  if (name) initName(name)
+}
+
+const introOn = document.documentElement.classList.contains('intro-on')
 const canvas = document.querySelector<HTMLCanvasElement>('#field')
-if (canvas) {
-  const field = initField(canvas)
-  // hovering (or focusing) a project floods the field with that project's colour
-  for (const row of document.querySelectorAll<HTMLElement>('[data-hue]')) {
-    const hue = Number(row.dataset.hue)
-    row.addEventListener('pointerenter', () => field.tint(hue))
-    row.addEventListener('pointerleave', () => field.tint(null))
-    row.addEventListener('focus', () => field.tint(hue))
-    row.addEventListener('blur', () => field.tint(null))
-  }
+const field = canvas ? initField(canvas, { intro: introOn, lines: ['ETHAN', 'TRAN'] }) : null
+
+if (introOn) {
+  initIntro(() => {
+    field?.enter()
+    startHero()
+  })
+} else {
+  startHero()
+}
+
+// hovering (or focusing) a project floods the field with that project's colour
+for (const row of document.querySelectorAll<HTMLElement>('[data-hue]')) {
+  const hue = Number(row.dataset.hue)
+  row.addEventListener('pointerenter', () => field?.tint(hue))
+  row.addEventListener('pointerleave', () => field?.tint(null))
+  row.addEventListener('focus', () => field?.tint(hue))
+  row.addEventListener('blur', () => field?.tint(null))
 }

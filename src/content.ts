@@ -35,7 +35,7 @@ export interface Standable {
 
 export const site = {
   name: 'Ethan Tran',
-  lead: 'Software engineer at UNC Chapel Hill. I build AI-backed backend systems, mobile apps and computer-vision tools, most recently an incident-response platform at IBM.',
+  lead: 'Computer science student at UNC Chapel Hill, interested in AI, backend and infrastructure. Most recently a software engineer intern at IBM.',
   email: 'hello@ethanctran.dev',
   github: 'https://github.com/etctran',
   linkedin: 'https://www.linkedin.com/in/ethanctran',
@@ -116,7 +116,8 @@ export const experience: Role[] = [
   },
 ]
 
-export const about: { paragraphs: Standable[] } = {
+// Set `photo` to a file in public/ (for example '/me.jpg') to replace the monogram in About.
+export const about: { paragraphs: Standable[]; photo?: string } = {
   paragraphs: [
     {
       text: 'I’m a computer science student at UNC Chapel Hill, graduating in May 2028. I like building software people lean on every day: an inventory app for the campus food pantry, a patient chatbot at CancerLINC, an incident-response platform at IBM.',

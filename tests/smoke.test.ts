@@ -32,6 +32,27 @@ test('the particle field is one decorative canvas, with a formation named for th
   ])
 })
 
+test('the name appears once on the home page: the nav carries links only', () => {
+  expect(html).not.toContain('nav__name')
+  const body = html.slice(html.indexOf('<body'))
+  expect(body.match(/Ethan/g)?.length).toBe(2) // the h1 and the footer line
+})
+
+test('the intro is a real button, and is switched on before first paint only when it should show', () => {
+  expect(html).toMatch(/<div[^>]*id="intro"/)
+  expect(html).toMatch(/<button[^>]*id="enter"/)
+  const head = html.slice(0, html.indexOf('</head>'))
+  expect(head).toContain("classList.add('intro-on')")
+  expect(head).toContain('location.hash') // deep links skip it
+  expect(head).toContain('prefers-reduced-motion') // so does reduced motion
+  expect(head).toContain('sessionStorage') // and anyone who has already entered this visit
+})
+
+test('link previews have a title, description and image', () => {
+  for (const p of ['og:title', 'og:description', 'og:image', 'twitter:card']) expect(html).toContain(p)
+  expect(() => readFileSync('public/og.jpg')).not.toThrow()
+})
+
 test('no eyebrow section numbers, no theme toggle', () => {
   expect(html).not.toMatch(/0\d \/ /)
   expect(html).not.toContain('id="theme"')

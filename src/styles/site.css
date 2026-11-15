@@ -47,6 +47,106 @@ a {
   border-radius: 4px;
 }
 
+/* intro: the page is held back while the particles spell the name */
+.intro {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  place-items: end center;
+  padding: 0 20px max(56px, 10vh);
+  cursor: pointer;
+  transition: opacity 300ms var(--ease-out);
+}
+
+.intro-on .intro,
+.intro-out .intro {
+  display: grid;
+}
+
+.intro-out .intro {
+  opacity: 0;
+  pointer-events: none;
+}
+
+html.intro-on {
+  overflow: hidden;
+}
+
+.intro-on .page {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.intro-on .progress {
+  visibility: hidden;
+}
+
+/* hold the hero's entrance until the visitor comes in */
+.intro-on .fade-up {
+  animation: none;
+}
+
+.enter {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 0 22px;
+  border: 1px solid rgb(244 243 238 / 0.45);
+  border-radius: 999px;
+  background: rgb(10 10 11 / 0.6);
+  color: var(--ink);
+  font: inherit;
+  font-weight: 650;
+  font-size: 15px;
+  cursor: pointer;
+  animation: enter-in 600ms var(--ease-enter) 900ms both;
+  transition: background-color 150ms var(--ease-out), transform 160ms var(--ease-out);
+}
+
+.enter:active {
+  transform: scale(0.97);
+}
+
+.enter svg {
+  animation: enter-nudge 1.8s var(--ease-out) 1.6s infinite;
+}
+
+.enter__touch {
+  display: none;
+}
+
+@media (hover: none) {
+  .enter__key,
+  .enter svg {
+    display: none;
+  }
+  .enter__touch {
+    display: inline;
+  }
+}
+
+@keyframes enter-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes enter-nudge {
+  0%, 60%, 100% {
+    transform: none;
+  }
+  30% {
+    transform: translateX(-4px);
+  }
+}
+
 /* the particle field sits behind the whole page */
 #field {
   position: fixed;
@@ -65,6 +165,7 @@ a {
   position: relative;
   z-index: 1;
   overflow-x: clip;
+  transition: opacity 700ms var(--ease-out) 150ms;
 }
 
 .wrap {
@@ -139,17 +240,9 @@ h2 {
 
 .nav__in {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
-  gap: 16px;
   padding-block: 22px;
-}
-
-.nav__name {
-  font-weight: 750;
-  font-stretch: 112%;
-  letter-spacing: -0.01em;
-  white-space: nowrap;
 }
 
 .nav__links {
@@ -281,6 +374,49 @@ h2 {
 
 .ink-scroll .w.on {
   color: var(--ink);
+}
+
+.about__side {
+  display: grid;
+  gap: 28px;
+}
+
+/* portrait: a circle inside the six-colour ring; the ring turns on hover */
+.portrait {
+  position: relative;
+  width: min(100%, 240px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  padding: 6px;
+  isolation: isolate;
+}
+
+.portrait::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: 50%;
+  background: conic-gradient(from -90deg, var(--spectrum));
+  transition: transform 900ms var(--ease-out);
+}
+
+.portrait img,
+.portrait span {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 5px solid var(--bg);
+  background: var(--bg);
+  object-fit: cover;
+}
+
+.portrait span {
+  font-size: 4rem;
+  font-variation-settings: 'wdth' 125, 'wght' 800;
+  letter-spacing: -0.04em;
 }
 
 .facts {
@@ -490,6 +626,12 @@ footer {
     transform: translate(2px, -2px);
     color: hsl(var(--h, 50) 100% 64%);
   }
+  .portrait:hover::before {
+    transform: rotate(180deg);
+  }
+  .enter:hover {
+    background: rgb(244 243 238 / 0.1);
+  }
 }
 
 /* narrow */
@@ -532,8 +674,8 @@ footer {
   body {
     font-size: 16px;
   }
-  .nav__name {
-    display: none;
+  .nav__in {
+    justify-content: flex-start;
   }
   .nav__links {
     gap: 20px;

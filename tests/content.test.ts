@@ -10,6 +10,12 @@ test('the hero facts drop "Looking for" and "Hackathons"', () => {
   expect(labels).not.toContain('Hackathons')
 })
 
+test('the hero line says student first, then interests and IBM', () => {
+  expect(site.lead).toMatch(/^Computer science student at UNC Chapel Hill/)
+  expect(site.lead).toMatch(/AI, backend and infrastructure/)
+  expect(site.lead).toMatch(/IBM/)
+})
+
 test('the TA scheduler is mentioned nowhere', () => {
   expect(all).not.toMatch(/scheduler|shifts and swaps|office-hours scheduler/i)
   expect(projects.map((p) => p.name)).not.toContain('TA scheduler')

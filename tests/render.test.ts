@@ -1,5 +1,5 @@
 import { test, expect } from 'vitest'
-import { renderProjects, renderExperience, renderAbout, renderFacts, renderContact, ext } from '../src/render'
+import { renderProjects, renderExperience, renderAbout, renderFacts, renderContact, renderPortrait, ext } from '../src/render'
 import { projects, site } from '../src/content'
 
 test('ext links open safely in a new tab', () => {
@@ -64,6 +64,16 @@ test('about renders its paragraphs and no timeline', () => {
   const html = renderAbout({ paragraphs: [{ text: 'Hi' }] })
   expect(html).toContain('<p class="about__lede" data-ink>Hi</p>')
   expect(html).not.toContain('<ol')
+})
+
+test('portrait shows the photo when there is one, and a monogram tile until then', () => {
+  const withPhoto = renderPortrait('/me.jpg')
+  expect(withPhoto).toContain('<img')
+  expect(withPhoto).toContain('src="/me.jpg"')
+  expect(withPhoto).toContain('alt="Ethan Tran"')
+  const without = renderPortrait(undefined)
+  expect(without).not.toContain('<img')
+  expect(without).toContain('portrait--empty')
 })
 
 test('contact shows the email as text and a copy button', () => {
