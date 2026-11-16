@@ -280,27 +280,33 @@ h2 {
   white-space: nowrap;
 }
 
-.name .ch {
-  display: inline-block;
-  font-variation-settings: 'wght' 800, 'wdth' 125;
-  animation: set 760ms var(--ease-enter) both;
-  animation-delay: calc(var(--i) * 45ms);
+/* Prism: six coloured copies under a white one; name.ts moves them apart */
+.name.is-prism {
+  position: relative;
+  width: max-content;
+  max-width: 100%;
 }
 
-.name.is-live .ch {
-  animation: none;
+.prism__c {
+  position: absolute;
+  inset: 0 auto auto 0;
+  mix-blend-mode: screen;
+  transform: translate(calc(var(--dx, 0px) * var(--k)), calc(var(--dy, 0px) * var(--k)));
+  will-change: transform;
+  animation: prism-in 500ms var(--ease-out) both;
 }
 
-@keyframes set {
+.prism__w {
+  position: relative;
+  display: block;
+  animation: prism-in 500ms var(--ease-out) both;
+}
+
+@keyframes prism-in {
   from {
-    font-variation-settings: 'wght' 150, 'wdth' 62;
     opacity: 0;
   }
-  35% {
-    opacity: 1;
-  }
   to {
-    font-variation-settings: 'wght' 800, 'wdth' 125;
     opacity: 1;
   }
 }
@@ -337,12 +343,50 @@ h2 {
 /* sections: translucent panels over the field, with open gaps between them */
 .panel {
   background: var(--panel);
-  border-block: 1px solid var(--line);
+  border-top: 1px solid #34343a;
+  border-radius: 24px 24px 0 0;
+  box-shadow: 0 -24px 60px -28px rgb(0 0 0 / 0.9);
   padding-block: clamp(64px, 10vh, 120px);
 }
 
-.gap {
-  height: 46vh;
+/* Stack (stack.ts adds html.stack): a card pins at its end, falls back and dims
+   over the next 80vh while the particles warp, then the next card slides up
+   over it. --r is how far it has fallen back, 0..1. */
+.stack .slot {
+  position: relative;
+}
+
+/* The room a pinned card travels in has to be content, not padding: a sticky
+   element cannot move into its container's padding. */
+.stack .slot::after {
+  content: '';
+  display: block;
+  height: 180vh; /* 80vh to fall back in + 100vh held under the next card */
+}
+
+.stack .slot + .slot {
+  margin-top: -100vh;
+}
+
+.stack .slot--last::after {
+  height: 80vh; /* nothing slides over the last card; it fades right out */
+}
+
+.stack .panel {
+  position: sticky;
+  top: var(--stick, 0px);
+  transform-origin: 50% var(--oy, 50%);
+  transform: scale(calc(1 - var(--r, 0) * 0.08));
+  /* dims early so the warp shows through, then goes completely once the next card (--c) has slid over it */
+  opacity: calc((1 - min(1, var(--r, 0) * 3) * var(--fade, 0.78)) * (1 - var(--c, 0)));
+}
+
+.stack .slot--last .panel {
+  --fade: 1;
+}
+
+.stack .panel.is-back {
+  pointer-events: none;
 }
 
 /* about */
@@ -664,9 +708,6 @@ footer {
   .exp {
     grid-template-columns: minmax(0, 1fr);
     gap: 6px;
-  }
-  .gap {
-    height: 36vh;
   }
 }
 

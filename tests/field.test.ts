@@ -1,36 +1,51 @@
 import { test, expect } from 'vitest'
-import { sectionBlend, staggered } from '../src/field/blend'
+import { sectionBlend, staggered, warpWeight } from '../src/field/blend'
 import { pickTargets } from '../src/field/text'
-import { velocity, gridHomes, FLOWS, MAX_SPEED, type Dot, type Env } from '../src/field/modes'
+import { velocity, warpVelocity, gridHomes, FLOWS, MAX_SPEED, type Dot, type Env } from '../src/field/modes'
 
 /* ---- which two formations to mix, from scroll position ---- */
-const tops = [0, 1000, 2400]
+// arrivals[j] is the scroll position at which section j's formation is fully in;
+// zones[j] is how much scroll before that the change takes.
+const arrivals = [0, 1000, 2400]
+const zones = [0, 400, 400]
 
-test('sectionBlend holds the current formation until the zone before the next section', () => {
-  expect(sectionBlend(tops, 300, 400)).toEqual({ from: 0, to: 1, t: 0 })
+test('sectionBlend holds the current formation until the zone before the next arrival', () => {
+  expect(sectionBlend(arrivals, 300, zones)).toEqual({ from: 0, to: 1, t: 0 })
+  expect(sectionBlend(arrivals, 600, zones)).toEqual({ from: 0, to: 1, t: 0 })
 })
 
 test('sectionBlend eases into the next formation across the zone', () => {
-  const mid = sectionBlend(tops, 800, 400)
+  const mid = sectionBlend(arrivals, 800, zones)
   expect(mid.from).toBe(0)
   expect(mid.to).toBe(1)
   expect(mid.t).toBeCloseTo(0.5)
-  const late = sectionBlend(tops, 950, 400)
+  const late = sectionBlend(arrivals, 950, zones)
   expect(late.t).toBeGreaterThan(mid.t)
   expect(late.t).toBeLessThan(1)
 })
 
-test('sectionBlend is continuous across a section top and rests on the last section', () => {
-  expect(sectionBlend(tops, 999.9, 400).t).toBeGreaterThan(0.99)
-  expect(sectionBlend(tops, 1000, 400)).toEqual({ from: 1, to: 2, t: 0 })
-  expect(sectionBlend(tops, 9000, 400)).toEqual({ from: 2, to: 2, t: 0 })
+test('sectionBlend is continuous across an arrival and rests on the last section', () => {
+  expect(sectionBlend(arrivals, 999.9, zones).t).toBeGreaterThan(0.99)
+  expect(sectionBlend(arrivals, 1000, zones)).toEqual({ from: 1, to: 2, t: 0 })
+  expect(sectionBlend(arrivals, 9000, zones)).toEqual({ from: 2, to: 2, t: 0 })
 })
 
-test('sectionBlend never starts a transition before `lead` px into the current section', () => {
-  // hero is one screen tall (900): with the viewport middle at 450 nothing has been scrolled yet
-  expect(sectionBlend([0, 900], 450, 720, 450).t).toBe(0)
-  expect(sectionBlend([0, 900], 700, 720, 450).t).toBeGreaterThan(0)
-  expect(sectionBlend([0, 900], 899.9, 720, 450).t).toBeGreaterThan(0.99)
+test('sectionBlend gives each section its own zone', () => {
+  const z = [0, 450, 800]
+  expect(sectionBlend(arrivals, 1600, z)).toEqual({ from: 1, to: 2, t: 0 })
+  expect(sectionBlend(arrivals, 2000, z).t).toBeCloseTo(0.5)
+  expect(sectionBlend(arrivals, 550, z).t).toBe(0)
+  expect(sectionBlend(arrivals, 775, z).t).toBeCloseTo(0.5)
+})
+
+/* ---- warp: mid-transition the dots rush outward, like flying forward ---- */
+test('warpWeight is 0 at both ends of a transition and 1 in the middle', () => {
+  expect(warpWeight(0)).toBe(0)
+  expect(warpWeight(1)).toBe(0)
+  expect(warpWeight(0.5)).toBe(1)
+  expect(warpWeight(0.25)).toBeGreaterThan(0)
+  expect(warpWeight(0.25)).toBeLessThan(1)
+  expect(warpWeight(0.25)).toBeCloseTo(warpWeight(0.75))
 })
 
 /* ---- each dot makes the change at its own moment, so shapes sweep instead of cross-fading ---- */
@@ -127,6 +142,25 @@ test('a far-away dot never gets a velocity above the speed cap', () => {
     velocity(mode, dot({ x: -5000, y: 9000, hx: 500, hy: 400, tx: 500, ty: 400 }), env, out)
     expect(Math.hypot(out[0], out[1])).toBeLessThanOrEqual(MAX_SPEED + 1e-9)
   }
+})
+
+test('warpVelocity pushes a dot straight out from the middle of the screen, faster the farther out it is', () => {
+  // env is 1000 x 800, so the middle is (500, 400)
+  warpVelocity(dot({ x: 700, y: 400 }), env, out)
+  const near = out[0]
+  expect(near).toBeGreaterThan(0)
+  expect(out[1]).toBeCloseTo(0)
+  warpVelocity(dot({ x: 950, y: 400 }), env, out)
+  expect(out[0]).toBeGreaterThan(near)
+  warpVelocity(dot({ x: 500, y: 100 }), env, out)
+  expect(out[1]).toBeLessThan(0)
+  expect(out[0]).toBeCloseTo(0)
+})
+
+test('warpVelocity still sends a dot somewhere when it sits exactly in the middle', () => {
+  warpVelocity(dot({ x: 500, y: 400, a: 1 }), env, out)
+  expect(Math.hypot(out[0], out[1])).toBeGreaterThan(0)
+  expect(Number.isFinite(out[0]) && Number.isFinite(out[1])).toBe(true)
 })
 
 test('gridHomes gives every dot a home inside the viewport', () => {

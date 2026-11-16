@@ -101,6 +101,24 @@ export function velocity(mode: Mode, q: Dot, e: Env, out: [number, number]): voi
   }
 }
 
+/**
+ * Warp: straight out from the middle of the screen, faster the farther out the
+ * dot already is, which reads as flying forward through the dots.
+ */
+export function warpVelocity(q: Dot, e: Env, out: [number, number]): void {
+  let dx = q.x - e.w / 2
+  let dy = q.y - e.h / 2
+  let d = Math.hypot(dx, dy)
+  if (d < 1) {
+    dx = Math.cos(q.a)
+    dy = Math.sin(q.a)
+    d = 1
+  }
+  const sp = Math.min(42, (1.5 + d * 0.055) * (0.7 + q.s * 0.5))
+  out[0] = (dx / d) * sp
+  out[1] = (dy / d) * sp
+}
+
 /** Home cells for `n` dots: an even lattice that fills a w×h viewport, in reading order. */
 export function gridHomes(n: number, w: number, h: number): Array<[number, number]> {
   const cols = Math.max(1, Math.round(Math.sqrt((n * w) / h)))

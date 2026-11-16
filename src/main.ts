@@ -7,6 +7,7 @@ import { initName } from './name'
 import { initInk } from './ink'
 import { initField } from './field'
 import { initIntro } from './intro'
+import { initStack } from './stack'
 
 function fill(selector: string, html: string): void {
   const el = document.querySelector<HTMLElement>(selector)
@@ -54,6 +55,7 @@ fill('#experience .section-content', renderExperience(experience))
 fill('#projects .section-content', renderProjects(projects))
 fill('#contact .section-content', renderContact(site))
 initCopy()
+initStack() // before the field measures where each section starts
 
 const statement = document.querySelector<HTMLElement>('[data-ink]')
 if (statement) initInk(statement)

@@ -4,25 +4,18 @@ const smooth = (x: number): number => {
 }
 
 /**
- * Which two formations to mix for the current scroll position.
- * `tops` are the page-Y tops of the hero and sections (ascending, first is 0),
- * `center` is the page-Y of the middle of the viewport, and the mix into the
- * next section happens over the `zone` px before its top — but never starts
- * less than `lead` px into the current section, so nothing has begun to change
- * before the visitor scrolls.
+ * Which two formations to mix at scroll position `y`.
+ * `arrivals[j]` is the scroll position at which section j's formation is
+ * fully in (arrivals[0] is the hero and is ignored); `zones[j]` is how many
+ * px of scroll before that the change takes.
  */
-export function sectionBlend(
-  tops: number[],
-  center: number,
-  zone: number,
-  lead = 0,
-): { from: number; to: number; t: number } {
+export function sectionBlend(arrivals: number[], y: number, zones: number[]): { from: number; to: number; t: number } {
   let i = 0
-  for (let k = 0; k < tops.length; k++) if (tops[k] <= center) i = k
+  for (let k = 1; k < arrivals.length; k++) if (arrivals[k] <= y) i = k
   const next = i + 1
-  if (next >= tops.length) return { from: i, to: i, t: 0 }
-  const z = Math.max(1, Math.min(zone, tops[next] - tops[i] - lead))
-  return { from: i, to: next, t: smooth((center - (tops[next] - z)) / z) }
+  if (next >= arrivals.length) return { from: i, to: i, t: 0 }
+  const z = Math.max(1, zones[next] ?? 1)
+  return { from: i, to: next, t: smooth((y - (arrivals[next] - z)) / z) }
 }
 
 /**
@@ -33,4 +26,11 @@ export function sectionBlend(
  */
 export function staggered(t: number, order: number, spread = 0.7): number {
   return smooth(t * (1 + spread) - order * spread)
+}
+
+/** How hard the dots rush outward `t` (0..1) of the way through a transition: 0 at both ends, 1 in the middle. */
+export function warpWeight(t: number): number {
+  const c = Math.min(1, Math.max(0, t))
+  const b = 4 * c * (1 - c)
+  return b * b
 }
