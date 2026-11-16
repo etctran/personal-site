@@ -60,9 +60,10 @@ export function initField(canvas: HTMLCanvasElement, opts: FieldOptions = {}): F
     const h = innerHeight
     const tops = sections.map((s) => s.getBoundingClientRect().top + scrollY)
     // a section's formation is fully in once its top reaches the middle of the screen,
-    // and the change never starts before the previous one has finished
+    // and the change starts only once that top has come onto the screen (half a screen earlier),
+    // never while the section before still fills the view
     arrivals = tops.map((top, j) => (j === 0 ? 0 : top - h / 2))
-    zones = arrivals.map((at, j) => (j === 0 ? 0 : Math.max(1, Math.min(h * 0.8, at - arrivals[j - 1]))))
+    zones = arrivals.map((at, j) => (j === 0 ? 0 : Math.max(1, Math.min(h * 0.5, at - arrivals[j - 1]))))
   }
 
   function spell(): void {
