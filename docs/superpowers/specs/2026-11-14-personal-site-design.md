@@ -166,6 +166,25 @@ disagrees with anything above or below, this wins.
   monogram until `about.photo` is set in `src/content.ts`.
 - **Link previews.** Open Graph / Twitter tags and `public/og.jpg`.
 
+## Revision 2026-11-15 (d) — Prism name, stacked cards, warp
+
+Chosen by Ethan from a live options page ("Ethan Tran Name Lab") and approved
+on a full-page preview. Supersedes the name effect and section layout above.
+
+- **Prism.** The h1 is six coloured copies under a white one. They start
+  thrown wide and snap together, then fan apart toward the pointer, on a
+  click, and as the hero scrolls away. Reduced motion: plain white text.
+- **Stack.** About, Experience and Projects are cards in `.slot` wrappers.
+  Each pins at its end (`position: sticky`), shrinks back and dims over the
+  next 80vh of scroll, and the next card slides up over it; a covered card
+  fades out completely. Cards are 84 % opaque. Projects, the last card, fades
+  right out before the open Contact screen.
+- **Warp.** Between cards (not leaving the hero) the particles rush outward
+  from the middle of the screen at the midpoint of the formation change, and
+  re-enter from the middle when they leave the screen.
+- **Timing.** Scroll effects inside a card finish on entry, before the card
+  pins.
+
 ## Decisions
 
 ### Stack (my call, from Ethan's existing tooling)
