@@ -1,8 +1,8 @@
-import { sectionBlend, staggered } from './blend'
+import { sectionBlend, staggered, dissolve } from './blend'
+import { paletteFor, localHour } from './palette'
 import { velocity, gridHomes, FLOWS, type Dot, type Env, type Mode } from './modes'
 import { nameTargets } from './text'
 
-const HUES = [6, 30, 50, 135, 190, 218]
 const BG = '10,10,11'
 const ALPHA: Record<Mode, number> = { ring: 0.95, wave: 0.75, stream: 0.85, grid: 1, core: 0.95, name: 1 }
 const WIDTH: Record<Mode, number> = { ring: 1.4, wave: 1.4, stream: 1.4, grid: 2.4, core: 1.4, name: 3 }
@@ -37,6 +37,8 @@ export function initField(canvas: HTMLCanvasElement, opts: FieldOptions = {}): F
   const sections = [...document.querySelectorAll<HTMLElement>('[data-field]')]
   const modes = sections.map((s) => s.dataset.field as Mode)
   const lines = opts.lines ?? []
+  const HUES = paletteFor(localHour()) // the six hues follow the visitor's local time
+  let fontReadyForName = false
   const env: Env = { w: 0, h: 0, t: 0, cx: 0, cy: 0, R: 0, kx: 0, ky: 0, r2: 0 }
   const ptr = { x: -1e4, y: -1e4 }
   const a: [number, number] = [0, 0]
@@ -67,9 +69,10 @@ export function initField(canvas: HTMLCanvasElement, opts: FieldOptions = {}): F
   }
 
   function spell(): void {
-    if (!intro || !fontReady) return
+    if (!fontReady) return
     const targets = nameTargets(lines, env.w, env.h, dots.length, FAMILY)
     if (targets.length !== dots.length) return
+    fontReadyForName = true
     dots.forEach((d, i) => {
       d.tx = targets[i][0]
       d.ty = targets[i][1]
@@ -162,12 +165,21 @@ export function initField(canvas: HTMLCanvasElement, opts: FieldOptions = {}): F
     }
 
     const { from, to, t } = sectionBlend(arrivals, scrollY, zones)
+    // scrolling away from the hero: the ring opens into the letters of the name,
+    // which then break up into the next formation (the h1 fades out meanwhile)
+    const dn = from === 0 && fontReadyForName && lines.length ? dissolve(scrollY, env.h) : 0
+    const nameWeight = dn > 0 ? 4 * dn * (1 - dn) : 0
     const mA = modes[from] ?? 'ring'
     const mB = modes[to] ?? mA
     const fA = FLOWS[mA]
     const fB = FLOWS[mB]
     alpha = ALPHA[mA] + (ALPHA[mB] - ALPHA[mA]) * t
     width = WIDTH[mA] + (WIDTH[mB] - WIDTH[mA]) * t
+    if (nameWeight > 0) {
+      // the letters draw bold and bright while they are forming
+      alpha = Math.max(alpha, nameWeight)
+      width = Math.max(width, (env.w < 900 ? 2 : WIDTH.name) * nameWeight)
+    }
     energy = Math.max(4 * t * (1 - t), Math.min(1, Math.abs(push) / 28), boost)
     for (const q of dots) {
       velocity(mA, q, env, a)
@@ -182,6 +194,12 @@ export function initField(canvas: HTMLCanvasElement, opts: FieldOptions = {}): F
           gx += (b[0] - gx) * ti
           gy += (b[1] - gy) * ti
         }
+      }
+      if (nameWeight > 0) {
+        // the letters win over whatever the sections want while the name is forming
+        velocity('name', q, env, b)
+        gx += (b[0] - gx) * nameWeight
+        gy += (b[1] - gy) * nameWeight
       }
       move(q, gx, gy, (fA ? 1 - ti : 0) + (fB ? ti : 0) > 0.5)
     }

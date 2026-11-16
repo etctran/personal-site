@@ -27,3 +27,8 @@ export function sectionBlend(arrivals: number[], y: number, zones: number[]): { 
 export function staggered(t: number, order: number, spread = 0.7): number {
   return smooth(t * (1 + spread) - order * spread)
 }
+
+/** How far the name has dissolved into the field as the hero scrolls away: 0 at the top, 1 after 75 % of a screen, eased between 10 % and 75 %. */
+export function dissolve(scrollY: number, viewH: number): number {
+  return smooth((scrollY / viewH - 0.1) / 0.65)
+}

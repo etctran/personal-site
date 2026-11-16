@@ -191,6 +191,18 @@ After seeing Stack and Warp on the live site Ethan asked for both to be
 undone. The page is back to translucent sections with open gaps, and the
 particles change formation by staggered unwinding only. The Prism name stays.
 
+## Revision 2026-11-16 — time-of-day palette, name dissolve, magnetic buttons
+
+- **Palette follows local time** (`src/field/palette.ts`): the six hues are
+  as designed at 15:00 and rotate 150° toward blue/violet by 03:00, on a
+  cosine so midnight blends smoothly.
+- **Name dissolves into the field.** Scrolling away from the hero, the h1
+  fades while the particles briefly spell ETHAN TRAN (the intro's letter
+  targets), then break into About's ribbons. Only after the webfont is in.
+- **Magnetic buttons** (`src/magnet.ts`): `.btn` leans up to 18 px toward a
+  pointer within 90 px of its edge and springs back. Fine pointer only; off
+  under reduced motion.
+
 ## Decisions
 
 ### Stack (my call, from Ethan's existing tooling)

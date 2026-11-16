@@ -225,6 +225,11 @@ h2 {
   color: var(--bg);
 }
 
+.btn {
+  /* magnet.ts leans the button toward a nearby pointer */
+  translate: var(--mx, 0px) var(--my, 0px);
+}
+
 .btn:active {
   transform: scale(0.97);
   transition-duration: 90ms;
@@ -283,6 +288,7 @@ h2 {
 /* Prism: six coloured copies under a white one; name.ts moves them apart */
 .name.is-prism {
   position: relative;
+  will-change: opacity;
   width: max-content;
   max-width: 100%;
 }

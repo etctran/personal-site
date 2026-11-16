@@ -53,6 +53,8 @@ export function initName(h1: HTMLElement): void {
     dy += (target.dy - dy) * 0.14
     h1.style.setProperty('--dx', `${dx.toFixed(2)}px`)
     h1.style.setProperty('--dy', `${dy.toFixed(2)}px`)
+    // the type fades as the particles take the name over (field/index.ts dissolves it)
+    h1.style.opacity = String(Math.max(0, 1 - Math.max(0, scrollY / innerHeight - 0.1) / 0.45).toFixed(3))
     raf = visible ? requestAnimationFrame(frame) : 0
   }
 
