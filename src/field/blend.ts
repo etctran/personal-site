@@ -27,10 +27,3 @@ export function sectionBlend(arrivals: number[], y: number, zones: number[]): { 
 export function staggered(t: number, order: number, spread = 0.7): number {
   return smooth(t * (1 + spread) - order * spread)
 }
-
-/** How hard the dots rush outward `t` (0..1) of the way through a transition: 0 at both ends, 1 in the middle. */
-export function warpWeight(t: number): number {
-  const c = Math.min(1, Math.max(0, t))
-  const b = 4 * c * (1 - c)
-  return b * b
-}

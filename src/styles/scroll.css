@@ -69,7 +69,7 @@
       transform-origin: left;
       animation: rule-draw linear both;
       animation-timeline: view();
-      animation-range: entry 0% entry 100%; /* done once the row is fully on screen, before its card pins */
+      animation-range: entry 20% cover 30%;
     }
     @keyframes rule-draw {
       from {
@@ -105,7 +105,7 @@
       transform-origin: top;
       animation: rail-fill linear both;
       animation-timeline: --exps;
-      animation-range: entry 15% entry 100%;
+      animation-range: cover 12% cover 72%;
     }
     @keyframes rail-fill {
       from {
@@ -130,7 +130,7 @@
       box-shadow: inset 0 0 0 2px var(--line);
       animation: marker-on linear both;
       animation-timeline: view();
-      animation-range: entry 40% entry 100%;
+      animation-range: cover 30% cover 40%;
     }
     @keyframes marker-on {
       to {
@@ -142,7 +142,7 @@
     .exp__date {
       animation: date-on linear both;
       animation-timeline: view();
-      animation-range: entry 40% entry 100%;
+      animation-range: cover 30% cover 40%;
     }
     @keyframes date-on {
       to {

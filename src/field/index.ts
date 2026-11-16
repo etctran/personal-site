@@ -1,6 +1,5 @@
-import { sectionBlend, staggered, warpWeight } from './blend'
-import { velocity, warpVelocity, gridHomes, FLOWS, type Dot, type Env, type Mode } from './modes'
-import { GAP } from '../stack'
+import { sectionBlend, staggered } from './blend'
+import { velocity, gridHomes, FLOWS, type Dot, type Env, type Mode } from './modes'
 import { nameTargets } from './text'
 
 const HUES = [6, 30, 50, 135, 190, 218]
@@ -42,7 +41,6 @@ export function initField(canvas: HTMLCanvasElement, opts: FieldOptions = {}): F
   const ptr = { x: -1e4, y: -1e4 }
   const a: [number, number] = [0, 0]
   const b: [number, number] = [0, 0]
-  const c: [number, number] = [0, 0]
   let intro = Boolean(opts.intro) && !reduced && lines.length > 0
   let fontReady = !document.fonts // spell the name once, in the real typeface, not twice
   let arrivals: number[] = [] // scroll position at which each section's formation is fully in
@@ -61,12 +59,10 @@ export function initField(canvas: HTMLCanvasElement, opts: FieldOptions = {}): F
   function measure(): void {
     const h = innerHeight
     const tops = sections.map((s) => s.getBoundingClientRect().top + scrollY)
-    // The first section is in once its top reaches the middle of the screen.
-    // Later ones follow a pinned card: they are in by the time their own top
-    // reaches the bottom of the screen, so the change plays out in the open
-    // gap while the card before them falls back.
-    arrivals = tops.map((top, j) => (j === 0 ? 0 : j === 1 ? top - h / 2 : top - h))
-    zones = arrivals.map((at, j) => (j === 0 ? 0 : Math.max(1, Math.min(h * GAP, at - arrivals[j - 1]))))
+    // a section's formation is fully in once its top reaches the middle of the screen,
+    // and the change never starts before the previous one has finished
+    arrivals = tops.map((top, j) => (j === 0 ? 0 : top - h / 2))
+    zones = arrivals.map((at, j) => (j === 0 ? 0 : Math.max(1, Math.min(h * 0.8, at - arrivals[j - 1]))))
   }
 
   function spell(): void {
@@ -165,8 +161,6 @@ export function initField(canvas: HTMLCanvasElement, opts: FieldOptions = {}): F
     }
 
     const { from, to, t } = sectionBlend(arrivals, scrollY, zones)
-    // between cards the dots rush outward mid-change, like flying forward; leaving the hero they just unwind
-    const wv = to >= 2 ? warpWeight(t) : 0
     const mA = modes[from] ?? 'ring'
     const mB = modes[to] ?? mA
     const fA = FLOWS[mA]
@@ -188,20 +182,7 @@ export function initField(canvas: HTMLCanvasElement, opts: FieldOptions = {}): F
           gy += (b[1] - gy) * ti
         }
       }
-      if (wv > 0) {
-        warpVelocity(q, env, c)
-        gx += (c[0] - gx) * wv
-        gy += (c[1] - gy) * wv
-      }
       move(q, gx, gy, (fA ? 1 - ti : 0) + (fB ? ti : 0) > 0.5)
-      // a dot that has flown off the screen comes back in from the middle
-      if (wv > 0.25 && (q.x < -24 || q.x > env.w + 24 || q.y < -24 || q.y > env.h + 24)) {
-        const ang = Math.random() * Math.PI * 2
-        const rad = 6 + Math.random() * 50
-        q.x = q.px = env.w / 2 + Math.cos(ang) * rad
-        q.y = q.py = env.h / 2 + Math.sin(ang) * rad
-        q.vx = q.vy = 0
-      }
     }
   }
 

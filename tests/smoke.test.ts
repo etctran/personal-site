@@ -9,19 +9,11 @@ test('shell has the nav, the name h1, the hero slots and the four sections', () 
 })
 
 test('sections come in the order About, Experience, Projects, Contact', () => {
-  const at = (id: string) => html.indexOf(` id="${id}"`)
+  const at = (id: string) => html.indexOf(`<section id="${id}"`)
   expect(at('about')).toBeGreaterThan(-1)
   expect(at('about')).toBeLessThan(at('experience'))
   expect(at('experience')).toBeLessThan(at('projects'))
   expect(at('projects')).toBeLessThan(at('contact'))
-})
-
-test('About, Experience and Projects are cards in slots; Projects is the last one', () => {
-  expect(html.match(/class="slot[^"]*"/g)?.length).toBe(3)
-  for (const id of ['about', 'experience', 'projects'])
-    expect(html).toMatch(new RegExp(`<div class="slot[^"]*" id="${id}"[^>]*>\\s*<section class="panel"`))
-  expect(html).toMatch(/<div class="slot slot--last" id="projects"/)
-  expect(html).not.toContain('class="gap"')
 })
 
 test('the name is real text in the HTML, so it reads without JS', () => {

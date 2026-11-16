@@ -185,6 +185,12 @@ on a full-page preview. Supersedes the name effect and section layout above.
 - **Timing.** Scroll effects inside a card finish on entry, before the card
   pins.
 
+## Revision 2026-11-15 (e) — Stack and Warp removed, Prism kept
+
+After seeing Stack and Warp on the live site Ethan asked for both to be
+undone. The page is back to translucent sections with open gaps, and the
+particles change formation by staggered unwinding only. The Prism name stays.
+
 ## Decisions
 
 ### Stack (my call, from Ethan's existing tooling)

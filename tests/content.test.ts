@@ -43,6 +43,13 @@ test('the About portrait is a real photo that ships with the site', () => {
   expect(readFileSync('public/me.jpg').length).toBeGreaterThan(5000)
 })
 
+test('no stacked cards and no warp: those were tried and removed', () => {
+  expect(siteCss).not.toMatch(/position:\s*sticky/)
+  expect(siteCss).not.toMatch(/\.slot|\.stack \.panel/) // `.row .stack` (a project's tech stack) is unrelated
+  expect(() => readFileSync('src/stack.ts')).toThrow()
+  expect(readFileSync('src/field/index.ts', 'utf8')).not.toMatch(/warp/i)
+})
+
 test('about has no timeline', () => {
   expect('timeline' in about).toBe(false)
 })

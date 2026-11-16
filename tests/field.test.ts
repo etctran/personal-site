@@ -1,7 +1,7 @@
 import { test, expect } from 'vitest'
-import { sectionBlend, staggered, warpWeight } from '../src/field/blend'
+import { sectionBlend, staggered } from '../src/field/blend'
 import { pickTargets } from '../src/field/text'
-import { velocity, warpVelocity, gridHomes, FLOWS, MAX_SPEED, type Dot, type Env } from '../src/field/modes'
+import { velocity, gridHomes, FLOWS, MAX_SPEED, type Dot, type Env } from '../src/field/modes'
 
 /* ---- which two formations to mix, from scroll position ---- */
 // arrivals[j] is the scroll position at which section j's formation is fully in;
@@ -36,16 +36,6 @@ test('sectionBlend gives each section its own zone', () => {
   expect(sectionBlend(arrivals, 2000, z).t).toBeCloseTo(0.5)
   expect(sectionBlend(arrivals, 550, z).t).toBe(0)
   expect(sectionBlend(arrivals, 775, z).t).toBeCloseTo(0.5)
-})
-
-/* ---- warp: mid-transition the dots rush outward, like flying forward ---- */
-test('warpWeight is 0 at both ends of a transition and 1 in the middle', () => {
-  expect(warpWeight(0)).toBe(0)
-  expect(warpWeight(1)).toBe(0)
-  expect(warpWeight(0.5)).toBe(1)
-  expect(warpWeight(0.25)).toBeGreaterThan(0)
-  expect(warpWeight(0.25)).toBeLessThan(1)
-  expect(warpWeight(0.25)).toBeCloseTo(warpWeight(0.75))
 })
 
 /* ---- each dot makes the change at its own moment, so shapes sweep instead of cross-fading ---- */
@@ -142,25 +132,6 @@ test('a far-away dot never gets a velocity above the speed cap', () => {
     velocity(mode, dot({ x: -5000, y: 9000, hx: 500, hy: 400, tx: 500, ty: 400 }), env, out)
     expect(Math.hypot(out[0], out[1])).toBeLessThanOrEqual(MAX_SPEED + 1e-9)
   }
-})
-
-test('warpVelocity pushes a dot straight out from the middle of the screen, faster the farther out it is', () => {
-  // env is 1000 x 800, so the middle is (500, 400)
-  warpVelocity(dot({ x: 700, y: 400 }), env, out)
-  const near = out[0]
-  expect(near).toBeGreaterThan(0)
-  expect(out[1]).toBeCloseTo(0)
-  warpVelocity(dot({ x: 950, y: 400 }), env, out)
-  expect(out[0]).toBeGreaterThan(near)
-  warpVelocity(dot({ x: 500, y: 100 }), env, out)
-  expect(out[1]).toBeLessThan(0)
-  expect(out[0]).toBeCloseTo(0)
-})
-
-test('warpVelocity still sends a dot somewhere when it sits exactly in the middle', () => {
-  warpVelocity(dot({ x: 500, y: 400, a: 1 }), env, out)
-  expect(Math.hypot(out[0], out[1])).toBeGreaterThan(0)
-  expect(Number.isFinite(out[0]) && Number.isFinite(out[1])).toBe(true)
 })
 
 test('gridHomes gives every dot a home inside the viewport', () => {

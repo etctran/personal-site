@@ -343,50 +343,12 @@ h2 {
 /* sections: translucent panels over the field, with open gaps between them */
 .panel {
   background: var(--panel);
-  border-top: 1px solid #34343a;
-  border-radius: 24px 24px 0 0;
-  box-shadow: 0 -24px 60px -28px rgb(0 0 0 / 0.9);
+  border-block: 1px solid var(--line);
   padding-block: clamp(64px, 10vh, 120px);
 }
 
-/* Stack (stack.ts adds html.stack): a card pins at its end, falls back and dims
-   over the next 80vh while the particles warp, then the next card slides up
-   over it. --r is how far it has fallen back, 0..1. */
-.stack .slot {
-  position: relative;
-}
-
-/* The room a pinned card travels in has to be content, not padding: a sticky
-   element cannot move into its container's padding. */
-.stack .slot::after {
-  content: '';
-  display: block;
-  height: 180vh; /* 80vh to fall back in + 100vh held under the next card */
-}
-
-.stack .slot + .slot {
-  margin-top: -100vh;
-}
-
-.stack .slot--last::after {
-  height: 80vh; /* nothing slides over the last card; it fades right out */
-}
-
-.stack .panel {
-  position: sticky;
-  top: var(--stick, 0px);
-  transform-origin: 50% var(--oy, 50%);
-  transform: scale(calc(1 - var(--r, 0) * 0.08));
-  /* dims early so the warp shows through, then goes completely once the next card (--c) has slid over it */
-  opacity: calc((1 - min(1, var(--r, 0) * 3) * var(--fade, 0.78)) * (1 - var(--c, 0)));
-}
-
-.stack .slot--last .panel {
-  --fade: 1;
-}
-
-.stack .panel.is-back {
-  pointer-events: none;
+.gap {
+  height: 46vh;
 }
 
 /* about */
@@ -708,6 +670,9 @@ footer {
   .exp {
     grid-template-columns: minmax(0, 1fr);
     gap: 6px;
+  }
+  .gap {
+    height: 36vh;
   }
 }
 
