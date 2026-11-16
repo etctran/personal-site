@@ -13,5 +13,7 @@
     "run_worker_first": true
   },
   // keeps the console.log lines so they show up under Logs in the dashboard
-  "observability": { "enabled": true }
+  "observability": { "enabled": true },
+  // lets Cloudflare build a separate test copy of every branch and pull request
+  "previews": {}
 }
