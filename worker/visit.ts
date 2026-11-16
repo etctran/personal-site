@@ -35,3 +35,9 @@ export function visitEntry(
     referrer: req.referer ?? null,
   }
 }
+
+/** One readable line per visit, which is what the Cloudflare log list shows, e.g. "Visit /google · Google LLC (AS15169) · US · from: direct". */
+export function visitMessage(v: Visit): string {
+  const network = v.org ? `${v.org}${v.asn ? ` (AS${v.asn})` : ''}` : 'unknown network'
+  return `Visit ${v.path} · ${network} · ${v.country ?? 'unknown country'} · from: ${v.referrer ?? 'direct'}`
+}

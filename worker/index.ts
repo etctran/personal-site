@@ -1,4 +1,4 @@
-import { visitEntry, type RequestOrigin } from './visit'
+import { visitEntry, visitMessage, type RequestOrigin } from './visit'
 
 interface Env {
   ASSETS: { fetch: (request: Request) => Promise<Response> }
@@ -22,7 +22,7 @@ export default {
         },
         (request as Request & { cf?: RequestOrigin }).cf,
       )
-      if (entry) console.log(JSON.stringify(entry))
+      if (entry) console.log(visitMessage(entry))
     } catch {
       // logging must never break the site
     }

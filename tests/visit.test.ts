@@ -1,5 +1,5 @@
 import { test, expect } from 'vitest'
-import { visitEntry } from '../worker/visit'
+import { visitEntry, visitMessage } from '../worker/visit'
 
 const page = { accept: 'text/html,application/xhtml+xml', method: 'GET' }
 const google = { asOrganization: 'Google LLC', asn: 15169, country: 'US', city: 'Mountain View', clientTcpRtt: 3 }
@@ -33,4 +33,15 @@ test('files the page loads (scripts, fonts, images) are not counted as visits', 
 
 test('only GET page loads count', () => {
   expect(visitEntry('https://ethanctran.dev/', { ...page, method: 'HEAD' }, google)).toBeNull()
+})
+
+/* the dashboard shows one message per row, so each visit reads as a sentence */
+test('visitMessage reads as one line with network, page, country and referrer', () => {
+  const e = visitEntry('https://ethanctran.dev/google', { ...page, referer: null }, google)!
+  expect(visitMessage(e)).toBe('Visit /google · Google LLC (AS15169) · US · from: direct')
+})
+
+test('visitMessage says when the network is unknown and shows the referrer', () => {
+  const e = visitEntry('https://ethanctran.dev/', { ...page, referer: 'https://www.linkedin.com/' }, undefined)!
+  expect(visitMessage(e)).toBe('Visit / · unknown network · unknown country · from: https://www.linkedin.com/')
 })

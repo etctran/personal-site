@@ -12,8 +12,9 @@
     // run the Worker on every request, so page visits can be logged
     "run_worker_first": true
   },
-  // keeps the console.log lines so they show up under Logs in the dashboard
-  "observability": { "enabled": true },
+  // keep the visit lines (Observability tab in the dashboard), but not an automatic
+  // row for every file the page loads
+  "observability": { "enabled": true, "logs": { "invocation_logs": false } },
   // lets Cloudflare build a separate test copy of every branch and pull request
   "previews": {}
 }
