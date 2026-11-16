@@ -1,0 +1,17 @@
+{
+  // Cloudflare Worker that serves the built site (dist/) and logs page visits.
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "personal-site",
+  "main": "worker/index.ts",
+  "compatibility_date": "2026-11-01",
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    // unknown paths (like /google tracking links) serve the home page
+    "not_found_handling": "single-page-application",
+    // run the Worker on every request, so page visits can be logged
+    "run_worker_first": true
+  },
+  // keeps the console.log lines so they show up under Logs in the dashboard
+  "observability": { "enabled": true }
+}
