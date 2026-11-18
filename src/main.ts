@@ -8,6 +8,7 @@ import { initInk } from './ink'
 import { initField } from './field'
 import { initIntro } from './intro'
 import { initMagnets } from './magnet'
+import { reportHuman, reportOnFirstInteraction } from './beacon'
 
 function fill(selector: string, html: string): void {
   const el = document.querySelector<HTMLElement>(selector)
@@ -70,12 +71,17 @@ const introOn = document.documentElement.classList.contains('intro-on')
 const canvas = document.querySelector<HTMLCanvasElement>('#field')
 const field = canvas ? initField(canvas, { intro: introOn, lines: ['ETHAN', 'TRAN'] }) : null
 
+// tell the Worker when a real person goes in, so the logs can tell people from bots
+const human = reportHuman(navigator, location.pathname)
+
 if (introOn) {
   initIntro(() => {
+    human('enter')
     field?.enter()
     startHero()
   })
 } else {
+  reportOnFirstInteraction(human)
   startHero()
 }
 

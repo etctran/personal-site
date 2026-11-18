@@ -1,4 +1,4 @@
-import { visitEntry, visitMessage, type RequestOrigin } from './visit'
+import { visitEntry, visitMessage, humanEntry, humanMessage, type RequestOrigin } from './visit'
 
 interface Env {
   ASSETS: { fetch: (request: Request) => Promise<Response> }
@@ -11,6 +11,19 @@ interface Env {
  */
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
+    const cf = (request as Request & { cf?: RequestOrigin }).cf
+    // the page's "a real person went in" signal (src/beacon.ts)
+    if (new URL(request.url).pathname === '/_human') {
+      if (request.method === 'POST') {
+        try {
+          const entry = humanEntry(await request.text(), cf)
+          if (entry) console.log(humanMessage(entry))
+        } catch {
+          // logging must never break the site
+        }
+      }
+      return new Response(null, { status: 204 })
+    }
     const response = await env.ASSETS.fetch(request)
     try {
       const entry = visitEntry(
@@ -20,7 +33,7 @@ export default {
           accept: request.headers.get('accept'),
           referer: request.headers.get('referer'),
         },
-        (request as Request & { cf?: RequestOrigin }).cf,
+        cf,
       )
       if (entry) console.log(visitMessage(entry))
     } catch {
