@@ -66,7 +66,10 @@ export function initField(canvas: HTMLCanvasElement, opts: FieldOptions = {}): F
     // a section's formation is fully in once its top reaches the middle of the screen,
     // and the change starts only once that top has come onto the screen (half a screen earlier),
     // never while the section before still fills the view
-    arrivals = tops.map((top, j) => (j === 0 ? 0 : top - h / 2))
+    // The last section follows Projects with no gap, so it waits until it nearly fills the screen:
+    // the ring starts forming with its top at 60 % of the way down and is done at 10 %.
+    const end = document.documentElement.scrollHeight - h
+    arrivals = tops.map((top, j) => (j === 0 ? 0 : j === tops.length - 1 ? Math.min(end, top - h * 0.1) : top - h / 2))
     zones = arrivals.map((at, j) => (j === 0 ? 0 : Math.max(1, Math.min(h * 0.5, at - arrivals[j - 1]))))
   }
 
