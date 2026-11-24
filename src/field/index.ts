@@ -1,6 +1,6 @@
 import { sectionBlend, staggered, dissolve } from './blend'
 import { paletteFor, localHour } from './palette'
-import { velocity, gridHomes, FLOWS, type Dot, type Env, type Mode } from './modes'
+import { velocity, gridHomes, matchHomes, FLOWS, type Dot, type Env, type Mode } from './modes'
 import { nameTargets } from './text'
 
 const BG = '10,10,11'
@@ -50,6 +50,8 @@ export function initField(canvas: HTMLCanvasElement, opts: FieldOptions = {}): F
   let dots: Dot[] = []
   let alpha = ALPHA.ring
   let width = WIDTH.ring
+  let spelledAt = -1 // clock when the intro's name was laid out; it fades in from there
+  let settled = false // the grid cells have been matched to the dots for this change
   let energy = 0 // 0..1: how much is changing right now; stretches the trails
   let boost = 0 // extra energy right after the intro bursts
   let lastY = scrollY
@@ -73,10 +75,18 @@ export function initField(canvas: HTMLCanvasElement, opts: FieldOptions = {}): F
     const targets = nameTargets(lines, env.w, env.h, dots.length, FAMILY)
     if (targets.length !== dots.length) return
     fontReadyForName = true
+    const first = intro && spelledAt < 0
     dots.forEach((d, i) => {
       d.tx = targets[i][0]
       d.ty = targets[i][1]
+      if (first) {
+        // a calm arrival: start a few px from the letter, unlit, and settle while fading in
+        d.x = d.px = d.tx + (Math.random() - 0.5) * 24
+        d.y = d.py = d.ty + (Math.random() - 0.5) * 24
+        d.vx = d.vy = 0
+      }
     })
+    if (first) spelledAt = performance.now()
   }
 
   function layout(): void {
@@ -113,9 +123,11 @@ export function initField(canvas: HTMLCanvasElement, opts: FieldOptions = {}): F
         }
       })
     } else {
+      // same dots, new size: each keeps the cell nearest the one it had
+      const kept = matchHomes(dots.map((d) => ({ x: d.hx, y: d.hy })), homes)
       dots.forEach((d, i) => {
-        d.hx = homes[i][0]
-        d.hy = homes[i][1]
+        d.hx = kept[i][0]
+        d.hy = kept[i][1]
       })
     }
     spell()
@@ -171,6 +183,19 @@ export function initField(canvas: HTMLCanvasElement, opts: FieldOptions = {}): F
     const nameWeight = dn > 0 ? 4 * dn * (1 - dn) : 0
     const mA = modes[from] ?? 'ring'
     const mB = modes[to] ?? mA
+    // stream <-> grid is a calm settle: nearby cells, all together, short trails
+    const calm = mA === 'stream' && mB === 'grid'
+    if (calm && t === 0) settled = false
+    if (calm && t > 0 && !settled) {
+      if (t < 0.5) {
+        const homes = matchHomes(dots, gridHomes(dots.length, env.w, env.h))
+        dots.forEach((d, i) => {
+          d.hx = homes[i][0]
+          d.hy = homes[i][1]
+        })
+      }
+      settled = true
+    }
     const fA = FLOWS[mA]
     const fB = FLOWS[mB]
     alpha = ALPHA[mA] + (ALPHA[mB] - ALPHA[mA]) * t
@@ -180,7 +205,7 @@ export function initField(canvas: HTMLCanvasElement, opts: FieldOptions = {}): F
       alpha = Math.max(alpha, nameWeight)
       width = Math.max(width, (env.w < 900 ? 2 : WIDTH.name) * nameWeight)
     }
-    energy = Math.max(4 * t * (1 - t), Math.min(1, Math.abs(push) / 28), boost)
+    energy = Math.max(calm ? 0 : 4 * t * (1 - t), Math.min(calm ? 0.25 : 1, Math.abs(push) / 28), boost)
     for (const q of dots) {
       velocity(mA, q, env, a)
       let gx = a[0]
@@ -188,7 +213,7 @@ export function initField(canvas: HTMLCanvasElement, opts: FieldOptions = {}): F
       let ti = 0
       if (t > 0) {
         // dots peel off one after another: by colour around a ring, by lane into a flow
-        ti = staggered(t, fB ? q.lane : q.o)
+        ti = calm ? Math.min(1, t * 2) : staggered(t, fB ? q.lane : q.o)
         if (ti > 0) {
           velocity(mB, q, env, b)
           gx += (b[0] - gx) * ti
@@ -201,7 +226,8 @@ export function initField(canvas: HTMLCanvasElement, opts: FieldOptions = {}): F
         gx += (b[0] - gx) * nameWeight
         gy += (b[1] - gy) * nameWeight
       }
-      move(q, gx, gy, (fA ? 1 - ti : 0) + (fB ? ti : 0) > 0.5)
+      // once a dot is settling it must not wrap to the left edge, or it would cross the whole screen
+      move(q, gx, gy, calm ? ti === 0 : (fA ? 1 - ti : 0) + (fB ? ti : 0) > 0.5)
     }
   }
 
@@ -218,6 +244,8 @@ export function initField(canvas: HTMLCanvasElement, opts: FieldOptions = {}): F
     for (let k = 0; k < HUES.length; k++) {
       const hue = HUES[k] + (tintTo - HUES[k]) * tintK * 0.9
       ctx!.strokeStyle = `hsl(${hue.toFixed(1)} 100% 62%)`
+      // intro: each colour fades in a little after the one to its left
+      if (intro) ctx!.globalAlpha = spelledAt < 0 ? 0 : alpha * Math.min(1, Math.max(0, (env.t - spelledAt) / 900 - k * 0.22))
       ctx!.beginPath()
       const end = Math.round(((k + 1) / HUES.length) * n)
       for (; i < end; i++) {

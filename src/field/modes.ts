@@ -109,3 +109,21 @@ export function gridHomes(n: number, w: number, h: number): Array<[number, numbe
   const sy = h / rows
   return Array.from({ length: n }, (_, i) => [((i % cols) + 0.5) * sx, (Math.floor(i / cols) + 0.5) * sy])
 }
+
+/**
+ * Pairs each dot with a nearby cell of `homes` (reading order, as gridHomes
+ * returns them): dots are dealt to rows by height, then along each row by x.
+ * Result is in dot order and uses every cell once.
+ */
+export function matchHomes(dots: Array<{ x: number; y: number }>, homes: Array<[number, number]>): Array<[number, number]> {
+  const out: Array<[number, number]> = new Array(dots.length)
+  const byY = dots.map((_, i) => i).sort((a, b) => dots[a].y - dots[b].y)
+  for (let i = 0; i < homes.length; ) {
+    let end = i
+    while (end < homes.length && homes[end][1] === homes[i][1]) end++
+    const row = byY.slice(i, end).sort((a, b) => dots[a].x - dots[b].x)
+    row.forEach((d, k) => (out[d] = homes[i + k]))
+    i = end
+  }
+  return out
+}

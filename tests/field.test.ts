@@ -1,7 +1,7 @@
 import { test, expect } from 'vitest'
 import { sectionBlend, staggered } from '../src/field/blend'
 import { pickTargets } from '../src/field/text'
-import { velocity, gridHomes, FLOWS, MAX_SPEED, type Dot, type Env } from '../src/field/modes'
+import { velocity, gridHomes, matchHomes, FLOWS, MAX_SPEED, type Dot, type Env } from '../src/field/modes'
 
 /* ---- which two formations to mix, from scroll position ---- */
 // arrivals[j] is the scroll position at which section j's formation is fully in;
@@ -143,4 +143,16 @@ test('gridHomes gives every dot a home inside the viewport', () => {
     expect(y).toBeGreaterThan(0)
     expect(y).toBeLessThan(900)
   }
+})
+
+/* ---- stream settles into the grid: each dot takes a nearby cell, so nothing flies across the screen ---- */
+test('matchHomes uses every cell once and keeps travel far shorter than index order', () => {
+  const homes = gridHomes(600, 1440, 900)
+  let seed = 7
+  const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647
+  const at = homes.map(() => ({ x: rnd() * 1440, y: rnd() * 900 }))
+  const got = matchHomes(at, homes)
+  expect(new Set(got.map((h) => h.join())).size).toBe(600)
+  const travel = (hs: Array<[number, number]>) => hs.reduce((s, h, i) => s + Math.hypot(h[0] - at[i].x, h[1] - at[i].y), 0) / hs.length
+  expect(travel(got)).toBeLessThan(travel(homes) / 4)
 })
