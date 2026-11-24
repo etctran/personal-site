@@ -85,7 +85,7 @@ export function velocity(mode: Mode, q: Dot, e: Env, out: [number, number]): voi
     case 'stream': {
       // straight lanes, left to right: data through a pipeline
       const ly = (0.05 + q.lane * 0.9) * e.h
-      out[0] = 2.4 * q.s + 1
+      out[0] = 0.95 * q.s + 0.4
       out[1] = (ly - q.y) * 0.03 + Math.sin(q.x * 0.008 + q.lane * 50) * 0.35
       return
     }
